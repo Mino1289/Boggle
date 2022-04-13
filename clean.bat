@@ -1,0 +1,1 @@
+@DEL /q *.o *.dll *.exe *.so *.zip
