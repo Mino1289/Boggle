@@ -20,17 +20,17 @@ char** initialize_grid(char** grid, int size) {
 void print_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int i = 0; i < size; i++) {
-            printf("+-");
+            printf("+---");
         }
         printf("+\n");
         printf("|");
         for (int j = 0; j < size; j++) {
-            printf("%c|", grid[i][j]);
+            printf(" %c |", grid[i][j]);
         }
         printf("\n");
     }
     for (int i = 0; i < size; i++) {
-        printf("+-");
+        printf("+---");
     }
     printf("+\n\n");
 }
