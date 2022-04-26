@@ -20,4 +20,6 @@ void print_grid(int size, char** grid);
 
 void free_grid(int size, char** grid);
 
+char** fill_grid_algo(int size, char** grid);
+
 #endif
