@@ -8,22 +8,22 @@ char** create_grid(int size) {
     return grid;
 }
 
-char** initialize_grid(char** grid, int size) {
+char** initialize_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            grid[i][j] = 'a';
+            grid[i][j] = '0';
         }
     }
     return grid;
 }
 
+
 void print_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
-        for (int i = 0; i < size; i++) {
+        for (int k = 0; k < size; k++) {
             printf("+---");
         }
-        printf("+\n");
-        printf("|");
+        printf("+\n|");
         for (int j = 0; j < size; j++) {
             printf(" %c |", grid[i][j]);
         }

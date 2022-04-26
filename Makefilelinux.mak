@@ -5,7 +5,7 @@ INCLUDEDIR = -I. -I/usr/include
 
 LIBCORENAME = grid
 LIBTARGET :=lib$(LIBCORENAME:=.so)
-LIBSOURCE = grid
+LIBSOURCE = grid generation
 LIBSOURCECFILE = $(LIBSOURCE:=.c)
 LIBSOURCEOFILE = $(LIBSOURCE:=.o)
 

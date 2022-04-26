@@ -5,7 +5,7 @@ INCLUDEDIR = -I.
 
 LIBCORENAME = grid
 LIBTARGET :=$(LIBCORENAME:=.dll)
-LIBSOURCE = grid
+LIBSOURCE = grid generation
 LIBSOURCECFILE = $(LIBSOURCE:=.c)
 LIBSOURCEOFILE = $(LIBSOURCE:=.o)
 
@@ -28,6 +28,9 @@ $(LIBTARGET): $(LIBSOURCEOFILE)
 
 .c.o:
 	$(CXX) $(CFLAGS) $(INCLUDEDIR) -c -o $@ $<
+
+save: $(TARGET)
+	$(TARGET) > $(EXESOURCE).txt
 
 clean: 
 	@clean.bat
