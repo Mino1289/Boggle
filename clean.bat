@@ -1,1 +1,1 @@
-@DEL /q *.o *.dll *.exe *.so *.zip main.txt
+@DEL /q *.o *.dll *.exe *.so main.txt
