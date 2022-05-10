@@ -12,10 +12,10 @@ int main(int argc, char* argv[]) {
 	int size = 8;
 	char** grid = create_grid(size);
 	grid = initialize_grid(size, grid);
-	print_grid(size, grid);
+	print_grid(size, grid, stdout);
 	grid = fill_grid_algo(size, grid);
 
-	print_grid(size, grid);
+	print_grid(size, grid, stdout);
 
 	// char word[24];
 	// scanf("%s", word);
