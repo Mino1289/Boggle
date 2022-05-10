@@ -1,1 +1,0 @@
-@DEL /q *.o *.dll *.exe *.so main.txt
