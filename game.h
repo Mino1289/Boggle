@@ -3,6 +3,12 @@
 
 #include <grid.h>
 
+
+typedef struct Player {
+    char* pseudo;
+    float score;
+} Player;
+
 /**
  * @brief Locates all the occurrences of a character in a grid.
  * 
@@ -36,6 +42,10 @@ Boolean is_around(int size, char** grid, int *row, int *col, char next);
  */
 Boolean contains_word(int size, char** grid, const char* word);
 
-int score(int size, int* sizewords);
+float score(float size, int* sizewords);
+
+void save_game(Player player, const char* file_path);
+
+Player* read_games(const char* file_path);
 
 #endif

@@ -80,10 +80,27 @@ Boolean contains_word(int size, char** grid, const char* word) {
     return FALSE;
 }
 
-int score(int size, int* sizewords) {
-    int score = 0;
+float score(int size, int* sizewords) {
+    float score = 0;
     for (int i = 0; i < size; i++) {
         score += pow(sizewords[i], 4.0/3.0);
     }
     return score;
+}
+
+void save_game(Player player, const char* file_path) {
+    FILE* file = fopen(file_path, "a");
+    fprintf(file, "%s\t%.2f", player.pseudo, player.score);
+    fclose(file);
+}
+
+Player* read_games(const char* file_path) {
+    FILE* file = fopen(file_path, "r");
+    Player* playerlist = (Player*) malloc(sizeof(Player)); // on va réalloc
+    int i = 0;
+    while (sscanf(file, "%s\t%d", &(playerlist[i].pseudo), &(playerlist[i].score)) != EOF) {
+        i++;
+        playerlist = realloc(sizeof(Player)*i);
+    }
+    return playerlist;
 }
