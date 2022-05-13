@@ -12,11 +12,11 @@ int main(int argc, char* argv[]) {
 	int size = 8;
 	char** grid = create_grid(size);
 	grid = initialize_grid(size, grid);
-	print_grid(size, grid, stdout);
 	grid = fill_grid_algo(size, grid);
 
 	print_grid(size, grid, stdout);
 
+	// TEST |
 	// char word[24];
 	// scanf("%s", word);
 	// printf("%s\n", word);
@@ -25,6 +25,7 @@ int main(int argc, char* argv[]) {
 	// } else {
 	// 	printf("%s is not in the grid\n", word);
 	// }
+	//TEST ^
 
 	free_grid(size, grid);
 	return EXIT_SUCCESS;

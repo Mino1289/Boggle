@@ -1,78 +1,89 @@
 #include <game.h>
 
-char gen_rand_char() {
-    int c = rand() % 26;
-    return 'a'+c;
-}
 
-Boolean contains_char(int size, char** grid, char c) {
+int** locate_char(int size, char** grid, char c, int* sizecoords) {
+    int** coords = malloc(sizeof(int*));
+    int k = 0;
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (grid[i][j] == c) {
-                return TRUE;
+                coords[k] = malloc(sizeof(int)*2);
+                coords[k][0] = i;
+                coords[k][1] = j;
+                k++;
+
+                coords = realloc(coords, sizeof(int*)*(k));
             }
         }
     }
+    *sizecoords = k;
+    return coords;
+}
+
+Boolean is_around(int size, char** grid, int *row, int *col, char next) {
+    if (*row-1 >= 0 && grid[*row-1][*col] == next) {
+        (*row)--;
+        return TRUE;
+    } else if (*row+1 < size && grid[*row+1][*col] == next) {
+        (*row)++;
+        return TRUE;
+    } else if (*col-1 >= 0 && grid[*row][*col-1] == next) {
+        (*col)--;
+        return TRUE;
+    } else if (*col+1 < size && grid[*row][*col+1] == next) {
+        (*col)++;
+        return TRUE;
+    } else if (*row-1 >= 0 && *col-1 >= 0 && grid[*row-1][*col-1] == next) {
+        (*row)--;
+        (*col)--;
+        return TRUE;
+    } else if (*row-1 >= 0 && *col+1 < size && grid[*row-1][*col+1] == next) {
+        (*row)--;
+        (*col)++;
+        return TRUE;
+    } else if (*row+1 < size && *col-1 >= 0 && grid[*row+1][*col-1] == next) {
+        (*row)++;
+        (*col)--;
+        return TRUE;
+    } else if (*row+1 < size && *col+1 < size && grid[*row+1][*col+1] == next) {
+        (*row)++;
+        (*col)++;
+        return TRUE;
+    } else {
+        (*row) = -1;
+        (*col) = -1;
+        return FALSE;
+    }
+}
+
+Boolean contains_word(int size, char** grid, const char* word) {
+    int wordlen = strlen(word); // size of the word -1
+    int sizecoords; // number of coordinates
+    int** coords = locate_char(size, grid, word[0], &sizecoords);
+    for (int k = 0; k < sizecoords; k++) {
+        int row = coords[k][0];
+        int col = coords[k][1];
+        int p = 0; // position in the word
+        while (p<wordlen-1 && (row != -1 || col != -1) && is_around(size, grid, &row, &col, word[p+1])) {
+            p++;
+        }
+        if (p == wordlen-1) {
+            return TRUE;
+        }
+    }
+
+    
+    for (int i = 0; i < sizecoords; i++) {
+        free(coords[i]);
+    }
+    free(coords);
     return FALSE;
 }
 
-void position_chars(int size, char** grid, char c, char next, int* row, int* col) {
-    for (int i = *row; i < size; i++) {
-        for (int j = *col; j < size; j++) {
-            if (grid[i][j] == c) {
-                if (grid[i+1][j] == next) {
-                    *row = i+1;
-                    *col = j;
-                    return;
-                } else if (grid[i-1][j] == next) {
-                    *row = i-1;
-                    *col = j;
-                    return;
-                } else if (grid[i][j+1] == next) {
-                    *row = i;
-                    *col = j+1;
-                    return;
-                } else if (grid[i][j-1] == next) {
-                    *row = i;
-                    *col = j-1;
-                    return;
-                } else if (grid[i+1][j+1] == next) {
-                    *row = i+1;
-                    *col = j+1;
-                    return;
-                } else if (grid[i-1][j-1] == next) {
-                    *row = i-1;
-                    *col = j-1;
-                    return;
-                } else if (grid[i-1][j+1] == next) {
-                    *row = i-1;
-                    *col = j+1;
-                    return;
-                } else if (grid[i+1][j-1] == next) {
-                    *row = i+1;
-                    *col = j-1;
-                    return;
-                }
-            }
-        }
+int score(int size, int* sizewords) {
+    int score = 0;
+    for (int i = 0; i < size; i++) {
+        score += pow(sizewords[i], 4.0/3.0);
     }
-    *row = -1;
-    *col = -1;
-    printf("Error: no position found for %c\n", next);
-}
-
-Boolean contains_word(int size, char** grid, char* word) {
-    int len = strlen(word) - 1;
-    int row=0, col=0;
-    for (int i = 0; i < len; i++) {
-        position_chars(size, grid, word[i], word[i+1], &row, &col);
-        if (row == -1 || col == -1) {
-            return FALSE;
-        }
-        printf("%c is in?\n", word[i]);
-    }
-    if (row == -1 || col == -1) {
-        return FALSE;
-    }
-    return TRUE;    
+    return score;
 }
