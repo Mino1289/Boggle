@@ -18,7 +18,7 @@ char** initialize_grid(int size, char** grid) {
     return grid;
 }
 
-
+#ifdef _WIN32
 void print_grid(int size, char** grid, FILE* stream) {
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
@@ -35,6 +35,24 @@ void print_grid(int size, char** grid, FILE* stream) {
     }
     fprintf(stream, "%c\n\n", 188);
 }
+#else
+void print_grid(int size, char** grid, FILE* stream) {
+    for (int i = 0; i < size; i++) {
+        for (int k = 0; k < size; k++) {
+            fprintf(stream, "+---");
+        }
+        fprintf(stream, "+\n|");
+        for (int j = 0; j < size; j++) {
+            fprintf(stream, " %c |", grid[i][j]);
+        }
+        fprintf(stream, "\n");
+    }
+    for (int i = 0; i < size; i++) {
+        fprintf(stream,"+---");
+    }
+    fprintf(stream, "+\n\n");
+}
+#endif
 
 void free_grid(int size, char** grid) {
     if (grid == NULL) {
@@ -64,8 +82,16 @@ Boolean contains_char(int size, char** grid, char c) {
 }
 
 char gen_rand_char() {
-    int c = rand() % 26;
-    return 'a'+c;
+    int lettersdist[] = {8.182, 9.094, 12.443, 16.116, 32.842, 33.909, 34.776, 35.514, 43.101, 43.715, 43.789,
+    49.251, 52.222, 59.325, 65.127, 67.651, 69.014, 75.714, 83.671, 90.923, 97.241, 99.081, 99.130, 99.557, 99.685, 100};
+    float nombre = (rand()) / 100.0f;
+    float somme = 0;
+    int i = 0;
+    while (i < 26 && nombre > somme + lettersdist[i]) {
+        somme += lettersdist[i];
+        i++;
+    }
+    return 'a' + i;
 }
 
 char** check_grid(int size, char** grid) {
