@@ -1,5 +1,5 @@
 CXX = gcc
-CFLAGS = -Wall -Werror -Wextra -pedantic -g
+CFLAGS = -Wall -Werror -Wextra -fpic -pedantic -g
 LIBSDIR = -L. -L/usr/lib
 INCLUDEDIR = -I. -I/usr/include
 

@@ -13,21 +13,13 @@ typedef enum {
 } Boolean;
 
 /**
- * @brief Create a grid object (square matrix)
+ * @brief Create a grid object (square matrix) filled with '0'.
  * 
  * @param size int - size of the grid
  * @return char** Pointer to the grid
  */
 char** create_grid(int size);
 
-/**
- * @brief Initialize the grid with 0 in it 
- * 
- * @param size int - size of the grid
- * @param grid char** - pointer to the grid
- * @return char** Pointer to the grid
- */
-char** initialize_grid(int size, char** grid);
 
 /**
  * @brief Print the grid
@@ -36,7 +28,7 @@ char** initialize_grid(int size, char** grid);
  * @param grid char** - pointer to the grid
  * @param stream FILE* - stream to print to
  */
-void print_grid(int size, char** grid, FILE* stream);
+void print_grid(FILE* stream, int size, char** grid);
 
 /**
  * @brief Free the grid

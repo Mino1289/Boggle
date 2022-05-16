@@ -3,14 +3,17 @@
 
 char** create_grid(int size) {
     char** grid = malloc(sizeof(char*) * size);
+    if (grid == NULL) {
+        fprintf(stderr, "ERROR: Could not allocate memory for grid, size (%d*%d)\n", size, size);
+        return NULL;
+    }
     for (int i = 0; i < size; i++) {
         grid[i] = malloc(sizeof(char) * size);
-    }
-    return grid;
-}
-
-char** initialize_grid(int size, char** grid) {
-    for (int i = 0; i < size; i++) {
+        if (grid[i] == NULL) {
+            fprintf(stderr, "ERROR: Could not allocate memory for grid rows, size (%d*%d)[%d]\n", size, size, i);
+            free_grid(size, grid); // par sécu
+            return NULL;
+        }
         for (int j = 0; j < size; j++) {
             grid[i][j] = '0';
         }
@@ -18,8 +21,9 @@ char** initialize_grid(int size, char** grid) {
     return grid;
 }
 
+
 #ifdef _WIN32
-void print_grid(int size, char** grid, FILE* stream) {
+void print_grid(FILE* stream, int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
             fprintf(stream, "%c%c%c%c", k==0 ? i==0 ? 201 : 204 : i==0 ? 203 : 206, 205, 205, 205);
@@ -36,7 +40,7 @@ void print_grid(int size, char** grid, FILE* stream) {
     fprintf(stream, "%c\n\n", 188);
 }
 #else
-void print_grid(int size, char** grid, FILE* stream) {
+void print_grid(FILE* stream, int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
             fprintf(stream, "+---");
@@ -81,14 +85,20 @@ Boolean contains_char(int size, char** grid, char c) {
     }
 }
 
+/**
+ * @brief MARCHE PO
+ * 
+ * @return char 
+ */
 char gen_rand_char() {
     int lettersdist[] = {8.182, 9.094, 12.443, 16.116, 32.842, 33.909, 34.776, 35.514, 43.101, 43.715, 43.789,
     49.251, 52.222, 59.325, 65.127, 67.651, 69.014, 75.714, 83.671, 90.923, 97.241, 99.081, 99.130, 99.557, 99.685, 100};
-    float nombre = (rand()) / 100.0f;
-    float somme = 0;
+    float nombre = rand() / 100.0f;
+    while (nombre >= 100) {
+        nombre = (rand()) / 100.0f;
+    }
     int i = 0;
-    while (i < 26 && nombre > somme + lettersdist[i]) {
-        somme += lettersdist[i];
+    while (i < 26 && nombre > lettersdist[i]) {
         i++;
     }
     return 'a' + i;
