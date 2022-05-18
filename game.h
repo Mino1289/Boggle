@@ -3,10 +3,14 @@
 
 #include <grid.h>
 
+#define MAX_CHAR_ARRAY_LENGTH 25
+
 
 typedef struct Player {
-    char* pseudo;
+    char pseudo[MAX_CHAR_ARRAY_LENGTH];
     float score;
+    int timeplayed;
+    int sizegrid;
 } Player;
 
 /**
@@ -20,32 +24,84 @@ typedef struct Player {
  */
 int** locate_char(int size, char** grid, char c, int* sizecoords);
 
-/**
- * @brief Checks if a char is around a given position.
- * 
- * @param size int - size of the grid.
- * @param grid char** - pointer to the grid to check.
- * @param row int* - pointer to the row of the position to check.
- * @param col int* - pointer to the column of the position to check.
- * @param next char - char to check.
- * @return Boolean 
- */
-Boolean is_around(int size, char** grid, int *row, int *col, char next);
 
 /**
  * @brief Checks if a word is in the grid.
- * 
+ * MARCHE PAS
  * @param size int - size of the grid.
  * @param grid char** - pointer to the grid to search.
- * @param word char* - pointer to the word to search.
+ * @param word char* - the word to search.
  * @return Boolean
  */
-Boolean contains_word(int size, char** grid, const char* word);
+Boolean search2D(int size, char** grid, const char* word);
 
-float score(float size, int* sizewords);
+/**
+ * @brief Checks if a word is in the dico.
+ * 
+ * @param word char* - word to search.
+ * @return Boolean 
+ */
+Boolean valid_word(const char* word);
 
+/**
+ * @brief Calculate the score of the player.
+ * 
+ * @param size int - size of the grid.
+ * @param sizewords int* - array of length of the words the player found.
+ * @return float the score of the player.
+ */
+float score(int size, int* sizewords);
+
+/**
+ * @brief Save the score of the player.
+ * 
+ * @param player Player - the player to save.
+ * @param file_path char* - the path of the file to save the score.
+ */
 void save_game(Player player, const char* file_path);
 
-Player* read_games(const char* file_path);
+/**
+ * @brief Read the list of players from a file.
+ * 
+ * @param file_path char* the path of the file to read.
+ * @param size int - the number of players (by address).
+ * @param Player** - list of players (by address).
+ */
+void read_games(const char* file_path, int* size, Player** players);
+
+/**
+ * @brief Print the playerlist.
+ *
+ * @param stream FILE* - the stream to print to.
+ * @param playerlist Player* - the list of players.
+ * @param size int - the number of players.
+ */
+void print_playerlist(FILE* stream, Player* playerlist, int size);
+
+/**
+ * @brief Get an integer from the user
+ * 
+ * @param message char* - the message to print to the user.
+ * @param min int - the minimum value of the integer.
+ * @param max int - the maximum value of the integer.
+ * @return int - the integer entered by the user.
+ */
+int get_integer_input(const char* message, int min, int max);
+
+/**
+ * @brief Get a string from the user
+ * 
+ * @param message char* - the message to print to the user.
+ * @param size int* - the size of the string (by address).
+ * @param input char** - the string entered by the user (by address).
+ */
+void get_string_input(const char* message, int* size, char** input);
+
+/**
+ * @brief Start a game.
+ * 
+ * @return Player - The player object of the player who played. 
+ */
+Player play();
 
 #endif
