@@ -23,38 +23,38 @@ char** create_grid(int size) {
 
 
 #ifdef _WIN32
-void print_grid(FILE* stream, int size, char** grid) {
+void print_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
-            fprintf(stream, "%c%c%c%c", k==0 ? i==0 ? 201 : 204 : i==0 ? 203 : 206, 205, 205, 205);
+            printf("%c%c%c%c", k==0 ? i==0 ? 201 : 204 : i==0 ? 203 : 206, 205, 205, 205);
         }
-        fprintf(stream, "%c\n%c", i==0 ? 187 : 185, 186);
+        printf("%c\n%c", i==0 ? 187 : 185, 186);
         for (int j = 0; j < size; j++) {
-            fprintf(stream, " %c %c", grid[i][j], 186);
+            printf( " %c %c", grid[i][j], 186);
         }
-        fprintf(stream, "\n");
+        printf("\n");
     }
     for (int i = 0; i < size; i++) {
-        fprintf(stream,"%c%c%c%c", i==0 ? 200 : 202, 205, 205, 205);
+        printf("%c%c%c%c", i==0 ? 200 : 202, 205, 205, 205);
     }
-    fprintf(stream, "%c\n\n", 188);
+    printf("%c\n\n", 188);
 }
 #else
-void print_grid(FILE* stream, int size, char** grid) {
+void print_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
-            fprintf(stream, "+---");
+            printf("+---");
         }
-        fprintf(stream, "+\n|");
+        printf("+\n|");
         for (int j = 0; j < size; j++) {
-            fprintf(stream, " %c |", grid[i][j]);
+            printf(" %c |", grid[i][j]);
         }
-        fprintf(stream, "\n");
+        printf("\n");
     }
     for (int i = 0; i < size; i++) {
-        fprintf(stream,"+---");
+        printf("+---");
     }
-    fprintf(stream, "+\n\n");
+    printf("+\n\n");
 }
 #endif
 

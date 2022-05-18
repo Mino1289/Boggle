@@ -26,9 +26,8 @@ char** create_grid(int size);
  * 
  * @param size int - size of the grid
  * @param grid char** - pointer to the grid
- * @param stream FILE* - stream to print to
  */
-void print_grid(FILE* stream, int size, char** grid);
+void print_grid(int size, char** grid);
 
 /**
  * @brief Free the grid
