@@ -57,16 +57,15 @@ char** fill_grid_algo(int size, char** grid) {
                 matsup[i][j] = grid[gap_col+i][gap_row+j]; //grid[col][row]
                 // ici on va gen les lettres
                 if (matsup[i][j] == '0') {
-                    char c = gen_rand_char();
+                    char c =gen_rand_char();
                     while (contains_char(3, matsup, c)) {
-                        c = gen_rand_char();
+                        c =gen_rand_char();
                     }
                     matsup[i][j] = c;
                 }
                 grid[gap_col+i][gap_row+j] = matsup[i][j];
             }
         }
-        print_grid(size, grid);
         if (gap_row+3 >= size) {
             gap_row = 0;
             gap_col += 1;

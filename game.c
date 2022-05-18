@@ -1,8 +1,26 @@
 #include <game.h>
+#include <grid.h>
 
 char gen_rand_char() {
-    int c = rand() % 26;
-    return 'a'+c;
+    char lettre =' '; // lettre aléatoire retournée 
+    int j = 0; // indice commun aux deux tableaux 
+    int alea = rand()%100000+1; // génération d'un nombre entier aléatoire 
+
+    int tab_proba[30] = {8.182, 9.084, 12.433, 16.106, 32.832, 33.899, 34.766, 35.504, 43.091, 43.705, 43.779,
+                         49.241, 52.212, 59.315, 65.117, 67.641, 69.004, 75.704, 83.661, 90.913, 97.231, 99.071, 99.120, 99.547,
+                         99.675, 100.000};
+    // tableau de 26 cases auquel on associe les proba sommées multipliées par un facteur 1000 afin d'avoir des entiers
+    char liste_lettres[30] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}; // tableau de lettre
+
+    while(alea < tab_proba[j]){ // tant que 
+        if (tab_proba[j]<alea){ // si le tableau de proba est bien inférieur à la valeur générée aléatoirement
+            j++; //incrémentation de l'indice j
+        }
+    }
+
+    lettre=liste_lettres[j]; // affectation d'une lettre égale à celle présente dans le tableau lettre et d'indice identique à celui du tableau de proba
+
+    return lettre; // retourner la lettre 
 }
 
 Boolean contains_char(int size, char** grid, char c) {
