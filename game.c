@@ -1,96 +1,243 @@
 #include <game.h>
 #include <grid.h>
 
-char gen_rand_char() {
-    char lettre =' '; // lettre aléatoire retournée 
-    int j = 0; // indice commun aux deux tableaux 
-    int alea = rand()%100000+1; // génération d'un nombre entier aléatoire 
-
-    int tab_proba[30] = {8.182, 9.084, 12.433, 16.106, 32.832, 33.899, 34.766, 35.504, 43.091, 43.705, 43.779,
-                         49.241, 52.212, 59.315, 65.117, 67.641, 69.004, 75.704, 83.661, 90.913, 97.231, 99.071, 99.120, 99.547,
-                         99.675, 100.000};
-    // tableau de 26 cases auquel on associe les proba sommées multipliées par un facteur 1000 afin d'avoir des entiers
-    char liste_lettres[30] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}; // tableau de lettre
-
-    while(alea < tab_proba[j]){ // tant que 
-        if (tab_proba[j]<alea){ // si le tableau de proba est bien inférieur à la valeur générée aléatoirement
-            j++; //incrémentation de l'indice j
-        }
+int** locate_char(int size, char** grid, char c, int* sizecoords) {
+    int** coords = malloc(sizeof(int*));
+    if (coords == NULL) {
+        fprintf(stderr, "ERROR: Could not allocate memory for coords.\n");
+        return NULL;
     }
-
-    lettre=liste_lettres[j]; // affectation d'une lettre égale à celle présente dans le tableau lettre et d'indice identique à celui du tableau de proba
-
-    return lettre; // retourner la lettre 
-}
-
-Boolean contains_char(int size, char** grid, char c) {
+    int k = 0;
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (grid[i][j] == c) {
-                return TRUE;
-            }
-        }
-    }
-    return FALSE;
-}
+                coords[k] = malloc(sizeof(int)*2);
+                if (coords[k] == NULL) {
+                    fprintf(stderr, "ERROR: Could not allocate memory for coords[%d].\n", k);
+                    return NULL;
+                }
+                coords[k][0] = i;
+                coords[k][1] = j;
+                k++;
 
-void position_chars(int size, char** grid, char c, char next, int* row, int* col) {
-    for (int i = *row; i < size; i++) {
-        for (int j = *col; j < size; j++) {
-            if (grid[i][j] == c) {
-                if (grid[i+1][j] == next) {
-                    *row = i+1;
-                    *col = j;
-                    return;
-                } else if (grid[i-1][j] == next) {
-                    *row = i-1;
-                    *col = j;
-                    return;
-                } else if (grid[i][j+1] == next) {
-                    *row = i;
-                    *col = j+1;
-                    return;
-                } else if (grid[i][j-1] == next) {
-                    *row = i;
-                    *col = j-1;
-                    return;
-                } else if (grid[i+1][j+1] == next) {
-                    *row = i+1;
-                    *col = j+1;
-                    return;
-                } else if (grid[i-1][j-1] == next) {
-                    *row = i-1;
-                    *col = j-1;
-                    return;
-                } else if (grid[i-1][j+1] == next) {
-                    *row = i-1;
-                    *col = j+1;
-                    return;
-                } else if (grid[i+1][j-1] == next) {
-                    *row = i+1;
-                    *col = j-1;
-                    return;
+                coords = realloc(coords, sizeof(int*)*(k+1));
+                if (coords == NULL) {
+                    fprintf(stderr, "ERROR: Could not reallocate memory for coords[%d].\n",k);
+                    return NULL;
                 }
             }
         }
     }
-    *row = -1;
-    *col = -1;
-    printf("Error: no position found for %c\n", next);
+    *sizecoords = k;
+    return coords;
 }
 
-Boolean contains_word(int size, char** grid, char* word) {
-    int len = strlen(word) - 1;
-    int row=0, col=0;
-    for (int i = 0; i < len; i++) {
-        position_chars(size, grid, word[i], word[i+1], &row, &col);
-        if (row == -1 || col == -1) {
+Boolean search2D(int size, char** grid, const char* word) {
+    int x[8] = { -1, -1, -1,  0, 0,  1, 1, 1 };
+    int y[8] = { -1,  0,  1, -1, 1, -1, 0, 1 };
+
+    int sizeword = strlen(word);
+    // int sizecoords;
+    // int** coords = locate_char(size, grid, word[0], &sizecoords);
+    int j = 0;
+    for (int i = 0; i < size; i++) {
+        for (int k = 0; k < size; k++) {
+            
+        }
+    }
+    /*
+    while (j < sizecoords) {
+        int row = coords[j][0], col = coords[j][1];
+        if (grid[row][col] != word[0]) {
             return FALSE;
         }
-        printf("%c is in?\n", word[i]);
+
+        for (int dir = 0; dir < sizecoords; dir++) {
+            int k, rd = x[dir], cd = y[dir];
+    
+            for (k = 1; k < sizeword; k++) {
+                if (rd >= size || rd < 0 || cd >= size || cd < 0) {
+                    break;
+                }
+                if (grid[rd][cd] != word[k]) {
+                    break;
+                }
+                rd += x[dir], cd += y[dir];
+            }
+            printf("%d\n", k);
+            if (k == sizecoords) {
+                return TRUE;
+            }
+        }
+        j++;
     }
-    if (row == -1 || col == -1) {
+    */
+    return FALSE;
+}
+
+Boolean valid_word(const char* word) {
+    const char* file_path = "dico.txt";
+    FILE* file = fopen(file_path, "r");
+    if (file == NULL) {
+        fprintf(stderr, "ERROR: Could not open file %s\n", file_path);
         return FALSE;
     }
-    return TRUE;    
+    char line[50];
+    Boolean found = FALSE;
+    while (fgets(line, sizeof(line), file) != NULL && !found) {
+        if (strcmp(line, word) == 0) {
+            found = TRUE;
+        }
+    }
+    fclose(file);
+    return found;
+}
+
+
+float score(int size, int* sizewords) {
+    float score = 0;
+    for (int i = 0; i < size; i++) {
+        score += pow(sizewords[i], 4.0/3.0);
+    }
+    return score;
+}
+
+void save_game(Player player, const char* file_path) {
+    FILE* file = fopen(file_path, "a");
+    fprintf(file, "%s\t%.2f", player.pseudo, player.score);
+    fclose(file);
+}
+
+void read_games(const char* file_path, int* size, Player** players) {
+    if (*players == NULL) {
+        *players = malloc(sizeof(Player));
+    }
+    FILE* file = fopen(file_path, "r");
+    if (file == NULL) {
+        fprintf(stderr, "ERROR: Could not open file %s\n", file_path);
+        return;
+    }
+    Player* playerlist = (Player*) malloc(sizeof(Player)); // on va réalloc
+    if (playerlist == NULL) {
+        fprintf(stderr, "ERROR: Could not allocate memory for playerlist\n");
+        return;
+    }
+    int i = 0;
+    /* FILE :
+    * pseudo    score   sizegrid    timeplayed 
+    */
+    while (fscanf(file, "%s\t%f\t%d\t%d\n", playerlist[i].pseudo, &(playerlist[i].score), &(playerlist[i].sizegrid), &(playerlist[i].timeplayed)) != EOF) {
+        i++;
+        playerlist = realloc(playerlist, sizeof(Player)*(i+1));
+    }
+    *size = i;
+    *players = playerlist;
+}
+
+void print_playerlist(FILE* stream, Player* playerlist, int size) {
+    for (int i = 0; i < size; i++) {
+        fprintf(stream, "%s\t%.2f\n", playerlist[i].pseudo, playerlist[i].score);
+    }
+}
+
+int get_integer_input(const char* message, int min, int max) {
+    char inputstring[MAX_CHAR_ARRAY_LENGTH];
+    int tmp, input=0;
+    do {
+        printf("%s", message);
+        scanf("%s", inputstring);
+        tmp = atoi(inputstring);
+        if (tmp >= min && tmp <= max) {
+            input = tmp;
+        } else {
+            fprintf(stderr, "ERROR: %d is not a valid size. Asking again\n", input);
+        }
+    } while (input == 0);
+
+    return input;
+}
+
+void get_string_input(const char* message, int* size, char** input) {
+    printf("%s\n", message);
+    char temp[MAX_CHAR_ARRAY_LENGTH];
+    scanf("%s", temp);
+    int k = strlen(temp)+1, i;
+    printf("%d\n", k);
+    (*input) = malloc(sizeof(char)*k);
+
+    for (i = 0; i < k; i++) {
+        (*input)[i] = temp[i];
+    }
+    (*input)[k] = '\0';
+    *size = k;
+}
+
+Player play() {
+    Player player;
+    int yes=1;
+    do {
+        char* name = NULL;
+        int sizename;
+        get_string_input("Choisissez un pseudo : ", &sizename, &name);
+        
+        int n, i = 0;
+        Player* gamelist = (Player*) malloc(sizeof(Player));
+        read_games("scores.txt", &n, &gamelist);
+        while (i <= n && strcmp(gamelist[i].pseudo, name) != 0) {
+            i++;
+        }
+
+        if (i <= n) {
+            player = gamelist[i];
+            printf("Vous avez déjà joué avec %s. Votre score était de %.2f\n", player.pseudo, player.score);
+            printf("Vous allez rejouer avec le même pseudo et perdre votre ancien score.\n");
+            yes = get_integer_input("Voulez-vous continuer ? (1 pour oui, 0 pour non) : ", 0, 1);
+        }
+        memcpy(player.pseudo, name, sizename);
+        free(gamelist);
+        free(name);
+    } while (yes == 0);
+    printf("Vous allez jouer en tant que : %s\n", player.pseudo);
+    
+    //  // ^ faut demander au joueur un pseudo, si il est pas pris, il le prend, sinon il en choisi un autre.
+
+    time_t debut = time(0);
+    int size = get_integer_input("Choisissez la taille de votre grille (4-8): ", 4, 8);
+    char** grid = create_grid(size);
+    grid = fill_grid_algo(size, grid);
+    double playtime = (double) get_integer_input("Choisissez le temps de jeu (60s-180s): ", 60, 180);
+    
+    int* wordslen = (int*) malloc(sizeof(int));
+    int sizewords = 0;
+    print_grid(size, grid);
+    do {
+        int sizeword = 0, i = 0;
+        char* word = NULL;
+
+        get_string_input("Entrez un mot: ", &sizeword, &word);
+        if (search2D(size, grid, word) && valid_word(word)) {
+            printf("Le mot %s est dans la grille\n", word);
+            wordslen[i] = sizeword;
+            i++;
+            wordslen = realloc(wordslen, sizeof(char*)*(i));
+        } else {
+            printf("Le mot %s n'est pas dans la grille\n", word);
+        }
+        if ((i+1) % 3 == 0) {
+            #ifdef _WIN32
+                system("cls");
+            #else
+                system("clear");
+            #endif
+        print_grid(size, grid);
+        }
+        sizewords = i;
+        free(word);
+    } while (difftime(debut, time(0)) < playtime);
+    player.score = score(sizewords, wordslen);
+    printf("C'est fini, votre score est de %.2f\n", player.score);
+    save_game(player, "scores.txt");
+
+    free(wordslen);
+    return player;
 }

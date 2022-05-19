@@ -3,7 +3,7 @@
 
 
 int main(int argc, char* argv[]) {
-	time_t seed = time(0);
+	long long seed = time(0);
 	if (argc > 1) {
 		seed = atoi(argv[1]);
 	}
@@ -11,21 +11,29 @@ int main(int argc, char* argv[]) {
 	srand(seed); 
 	/*int size = 4; 
 	char** grid = create_grid(size);
-	grid = initialize_grid(size, grid);
-	print_grid(size, grid);
 	grid = fill_grid_algo(size, grid);
 
 	print_grid(size, grid); */
 	char c = gen_rand_char();
 	printf("%d = %c\n", c,c);
 
-	// char word[24];
-	// scanf("%s", word);
-	// printf("%s\n", word);
-	// if (contains_word(size, grid, word)) {
-	// 	printf("%s is in the grid\n", word);
-	// } else {
-	// 	printf("%s is not in the grid\n", word);
+
+	// TEST |
+	char* word=NULL;// = (char*) malloc(sizeof(char));
+	int wordlen;
+	get_string_input("Find a word in the grid:", &wordlen, &word);
+	printf("%s\n", word);
+	if (search2D(size, grid, word)) {
+		printf("%s is in the grid\n", word);
+	} else {
+		printf("%s is not in the grid\n", word);
+	}
+	//TEST ^
+
+	// int k;
+	// Player* playerlist = read_games("scores.txt", &k);
+	// for (int i = 0; i < k; i++) {
+	// 	printf("%s\t%.2f\n", playerlist[i].pseudo, playerlist[i].score);
 	// }
 
 	// free_grid(size, grid);
@@ -60,5 +68,10 @@ int main(int argc, char* argv[]) {
 				break;
 		}
 
+
+	// Player player = play();
+	// printf("%s\t%.2f\n", player.pseudo, player.score);
+
+	free_grid(size, grid);
 	return EXIT_SUCCESS;
 }

@@ -1,5 +1,5 @@
 CXX = gcc
-CFLAGS = -Wall -Werror -Wextra -pedantic -g
+CFLAGS = -Wall -Werror -Wextra -fpic -pedantic -g
 LIBSDIR = -L. -L/usr/lib
 INCLUDEDIR = -I. -I/usr/include
 
@@ -8,7 +8,7 @@ LIBCORENAME = grid
 ifeq ($(OS), Windows_NT)
 	EXPORT = export.bat
 	LIBTARGET :=$(LIBCORENAME:=.dll)
-	CLEANCMD = @clean.bat
+	CLEANCMD = @del /q *.o *.dll *.exe *.so main.txt
 else
 	EXPORT = sh export.sh
 	LIBTARGET :=lib$(LIBCORENAME:=.so)
