@@ -1,4 +1,5 @@
 #include <game.h>
+#include <grid.h>
 
 int** locate_char(int size, char** grid, char c, int* sizecoords) {
     int** coords = malloc(sizeof(int*));
