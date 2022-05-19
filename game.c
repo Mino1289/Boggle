@@ -244,8 +244,10 @@ Player play() {
             printf("Le pseudo %s a déjà été utilisé.\n", name);
             printf("Vous ne pouvez pas le réutiliser.\n");
             yes = 0;
+        } else {
+            memcpy(player.pseudo, name, sizename);
+            yes = 1;
         }
-        memcpy(player.pseudo, name, sizename);
         free(gamelist);
         free(name);
     } while (yes == 0);
@@ -284,7 +286,7 @@ Player play() {
                 wordslen[i] = sizeword-1;
   
                 i++;
-                wordslen = realloc(wordslen, sizeof(char*)*(i+1));
+                wordslen = realloc(wordslen, sizeof(int)*(i+1));
             } else {
                 printf("Le mot %s n'est pas dans le dictionnaire\n", word);
             }
@@ -301,13 +303,9 @@ Player play() {
         sizewords = i;
         free(word);
         dtime = difftime(time(0), debut);
-        printf("Temps %ccoul%c : %.2fs sur %.2f\n", 130,130,dtime, playtime);
+        printf("Temps %ccoul%c : %.2fs sur %.2f\n", ACCENT_E, ACCENT_E,dtime, playtime);
     } while (dtime < playtime);
     player.score = score(sizewords, wordslen);
-    printf("Vous avez trouvé les mots de longueur suivants :\n");
-    for (int i = 0; i < sizewords; i++) {
-        printf(" %d ", wordslen[i]);
-    }
     printf("C'est fini, votre score est de %.2f\n", player.score);
     wait(2);
     save_game(player, "scores.txt");
