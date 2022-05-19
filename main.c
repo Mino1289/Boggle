@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
 
 	do {
 		clear();
+		printf("Bienvenue dans le jeu\nBOGGLE\n");
 		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 3);
 		int k;
 		Player* playerlist = (Player*) malloc(sizeof(Player));

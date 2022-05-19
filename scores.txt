@@ -1,7 +1,0 @@
-lemon	2.50	5	180
-Mino	4.20	8	60
-moshi	8.55	8	180
-vico	4.33	4	60
-vict	6.35	7	120
-micho	6.35	4	60
-moine	4.33	4	60
