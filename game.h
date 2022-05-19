@@ -24,6 +24,18 @@ typedef struct Player {
  */
 int** locate_char(int size, char** grid, char c, int* sizecoords);
 
+/**
+ * @brief 
+ * 
+ * @param size int - size of the grid
+ * @param grid char** - grid to search in
+ * @param row int* - position of the current character (by address).
+ * @param col int* - position of the current character (by address).
+ * @param c char - the current character.
+ * @param next char - the next character.
+ * @return Boolean Whether the next character is around the current one.
+ */
+Boolean is_around(int size, char** grid, int* row, int* col, char c, char next);
 
 /**
  * @brief Checks if a word is in the grid.
@@ -69,6 +81,8 @@ void save_game(Player player, const char* file_path);
  */
 void read_games(const char* file_path, int* size, Player** players);
 
+void swapPlayer(Player* playerlist, int index1, int index2);
+
 /**
  * @brief Print the playerlist.
  *
@@ -76,7 +90,7 @@ void read_games(const char* file_path, int* size, Player** players);
  * @param playerlist Player* - the list of players.
  * @param size int - the number of players.
  */
-void print_playerlist(FILE* stream, Player* playerlist, int size);
+void orderAndPrint_playerlist(FILE* stream, Player* playerlist, int size);
 
 /**
  * @brief Get an integer from the user
@@ -96,6 +110,11 @@ int get_integer_input(const char* message, int min, int max);
  * @param input char** - the string entered by the user (by address).
  */
 void get_string_input(const char* message, int* size, char** input);
+
+void clear();
+
+void wait(int seconds);
+
 
 /**
  * @brief Start a game.
