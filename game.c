@@ -32,47 +32,66 @@ int** locate_char(int size, char** grid, char c, int* sizecoords) {
     return coords;
 }
 
-Boolean search2D(int size, char** grid, const char* word) {
-    int x[8] = { -1, -1, -1,  0, 0,  1, 1, 1 };
-    int y[8] = { -1,  0,  1, -1, 1, -1, 0, 1 };
-
-    int sizeword = strlen(word);
-    // int sizecoords;
-    // int** coords = locate_char(size, grid, word[0], &sizecoords);
-    int j = 0;
-    for (int i = 0; i < size; i++) {
-        for (int k = 0; k < size; k++) {
-            
-        }
-    }
-    /*
-    while (j < sizecoords) {
-        int row = coords[j][0], col = coords[j][1];
-        if (grid[row][col] != word[0]) {
+Boolean is_around(int size, char** grid, int* row, int* col, char c, char next) {
+    if (grid[*row][*col] == c) {
+        if (*row > 0 && grid[*row-1][*col] == next) {
+            *row -= 1;
+            return TRUE;
+        } else if (*row < size-1 && grid[*row+1][*col] == next) {
+            *row += 1;
+            return TRUE;
+        } else if (*col > 0 && grid[*row][*col-1] == next) {
+            *col -= 1;
+            return TRUE;
+        } else if (*col < size-1 && grid[*row][*col+1] == next) {
+            *col += 1;
+            return TRUE;
+        } else if (*row > 0 && *col > 0 && grid[*row-1][*col-1] == next) {
+            *row -= 1;
+            *col -= 1;
+            return TRUE;
+        } else if (*row > 0 && *col < size-1 && grid[*row-1][*col+1] == next) {
+            *row -= 1;
+            *col += 1;
+            return TRUE;
+        } else if (*row < size-1 && *col > 0 && grid[*row+1][*col-1] == next) {
+            *row += 1;
+            *col -= 1;
+            return TRUE;
+        } else if (*row < size-1 && *col < size-1 && grid[*row+1][*col+1] == next) {
+            *row += 1;
+            *col += 1;
+            return TRUE;
+        } else {
             return FALSE;
         }
-
-        for (int dir = 0; dir < sizecoords; dir++) {
-            int k, rd = x[dir], cd = y[dir];
-    
-            for (k = 1; k < sizeword; k++) {
-                if (rd >= size || rd < 0 || cd >= size || cd < 0) {
-                    break;
-                }
-                if (grid[rd][cd] != word[k]) {
-                    break;
-                }
-                rd += x[dir], cd += y[dir];
-            }
-            printf("%d\n", k);
-            if (k == sizecoords) {
-                return TRUE;
-            }
-        }
-        j++;
+    } else {
+        fprintf(stderr, "ERROR: The character at (%d, %d) is not %c.\n", *row, *col, c);
+        return FALSE;
     }
-    */
-    return FALSE;
+}
+
+Boolean search2D(int size, char** grid, const char* word) {
+
+    int sizeword = strlen(word);
+    int sizecoords;
+    int** coords = locate_char(size, grid, word[0], &sizecoords);
+    int k = 0;
+    Boolean found = FALSE;
+    while (k < sizecoords && !found) {
+        int row = coords[k][0];
+        int col = coords[k][1];
+        int i = 1;
+        while (i < sizeword && is_around(size, grid, &row, &col, word[i-1], word[i])) {
+            i++;
+        }
+        if (i == sizeword) {
+            found = TRUE;
+        }
+        k++;
+    }
+    
+    return found;
 }
 
 Boolean valid_word(const char* word) {
