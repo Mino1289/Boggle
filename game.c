@@ -162,11 +162,11 @@ void swapPlayer(Player* playerlist, int index1, int index2) {
 void orderAndPrint_playerlist(FILE* stream, Player* playerlist, int size) {
     //on bubble sort puis on print tout
     Boolean weswap;
-    int loop;
+    int loop = 0;
     do {
         weswap = FALSE;
         for (int i = 0; i < size-1-loop; i++) {
-            if (playerlist[i].score > playerlist[i+1].score) {
+            if (playerlist[i].score < playerlist[i+1].score) {
                 swapPlayer(playerlist, i, i+1);
                 weswap = TRUE;
             }

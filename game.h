@@ -81,6 +81,13 @@ void save_game(Player player, const char* file_path);
  */
 void read_games(const char* file_path, int* size, Player** players);
 
+/**
+ * @brief Swap two players in the list of players.
+ * 
+ * @param playerlist Player* - list of players.
+ * @param index1 int - index of the first player.
+ * @param index2 int - index of the second player.
+ */
 void swapPlayer(Player* playerlist, int index1, int index2);
 
 /**
@@ -111,10 +118,18 @@ int get_integer_input(const char* message, int min, int max);
  */
 void get_string_input(const char* message, int* size, char** input);
 
+/**
+ * @brief Clear stdin.
+ * 
+ */
 void clear();
 
+/**
+ * @brief Wait some time.
+ * 
+ * @param seconds int - the number of seconds to wait
+ */
 void wait(int seconds);
-
 
 /**
  * @brief Start a game.
