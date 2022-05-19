@@ -153,9 +153,29 @@ void read_games(const char* file_path, int* size, Player** players) {
     *players = playerlist;
 }
 
-void print_playerlist(FILE* stream, Player* playerlist, int size) {
+void swapPlayer(Player* playerlist, int index1, int index2) {
+    Player tmp = playerlist[index1];
+    playerlist[index1] = playerlist[index2];
+    playerlist[index2] = tmp;
+}
+
+void orderAndPrint_playerlist(FILE* stream, Player* playerlist, int size) {
+    //on bubble sort puis on print tout
+    Boolean weswap;
+    int loop;
+    do {
+        weswap = FALSE;
+        for (int i = 0; i < size-1-loop; i++) {
+            if (playerlist[i].score > playerlist[i+1].score) {
+                swapPlayer(playerlist, i, i+1);
+                weswap = TRUE;
+            }
+        }
+        loop++;
+    } while (weswap);
+
     for (int i = 0; i < size; i++) {
-        fprintf(stream, "%s\t%.2f\n", playerlist[i].pseudo, playerlist[i].score);
+        fprintf(stream, "%s\t%.2f\t%d\t%d\n", playerlist[i].pseudo, playerlist[i].score, playerlist[i].sizegrid, playerlist[i].timeplayed);
     }
 }
 
@@ -190,6 +210,21 @@ void get_string_input(const char* message, int* size, char** input) {
     *size = k;
 }
 
+void clear() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+void wait(int seconds) {
+    double dtime = time(0);
+    while (difftime(time(0), dtime) < seconds) {
+        //wait
+    }
+}
+
 Player play() {
     Player player;
     int yes=1;
@@ -206,10 +241,9 @@ Player play() {
         }
 
         if (i <= n) {
-            player = gamelist[i];
-            printf("Vous avez déjà joué avec %s. Votre score était de %.2f\n", player.pseudo, player.score);
-            printf("Vous allez rejouer avec le même pseudo et perdre votre ancien score.\n");
-            yes = get_integer_input("Voulez-vous continuer ? (1 pour oui, 0 pour non) : ", 0, 1);
+            printf("Le pseudo %s a déjà été utilisé.\n", name);
+            printf("Vous ne pouvez pas le réutiliser.\n");
+            yes = 0;
         }
         memcpy(player.pseudo, name, sizename);
         free(gamelist);
@@ -230,6 +264,11 @@ Player play() {
     player.timeplayed = playtime;
     
     int* wordslen = (int*) malloc(sizeof(int));
+    if (wordslen == NULL) {
+        fprintf(stderr, "ERROR: Could not allocate memory for wordslen\n");
+        return player;
+    }
+
     int sizewords = 0, iter = 1;
     double dtime = 0;
 
@@ -239,20 +278,22 @@ Player play() {
         char* word = NULL;
 
         get_string_input("Entrez un mot: ", &sizeword, &word);
-        if (search2D(size, grid, word) && valid_word(word)) {
-            printf("Le mot %s est dans la grille\n", word);
-            wordslen[i] = sizeword-1;
-            i++;
-            wordslen = realloc(wordslen, sizeof(char*)*(i));
+        if (search2D(size, grid, word)) {
+            if (valid_word(word)) {
+                printf("Le mot %s est dans la grille\n", word);
+                wordslen[i] = sizeword-1;
+  
+                i++;
+                wordslen = realloc(wordslen, sizeof(char*)*(i+1));
+            } else {
+                printf("Le mot %s n'est pas dans le dictionnaire\n", word);
+            }
         } else {
-            printf("Le mot %s n'est pas dans la grille\n", word);
+           printf("Le mot %s n'est pas dans la grille\n", word);
         }
         if (iter % 3 == 0){
-            #ifdef _WIN32
-                system("cls");
-            #else
-                system("clear");
-            #endif
+            wait(1);
+            clear();
             print_grid(size, grid);
         }
         iter++;
@@ -260,10 +301,15 @@ Player play() {
         sizewords = i;
         free(word);
         dtime = difftime(time(0), debut);
-        printf("Temps écoulé : %.2fs sur %.2f\n", dtime, playtime);
+        printf("Temps %ccoul%c : %.2fs sur %.2f\n", 130,130,dtime, playtime);
     } while (dtime < playtime);
     player.score = score(sizewords, wordslen);
+    printf("Vous avez trouvé les mots de longueur suivants :\n");
+    for (int i = 0; i < sizewords; i++) {
+        printf(" %d ", wordslen[i]);
+    }
     printf("C'est fini, votre score est de %.2f\n", player.score);
+    wait(2);
     save_game(player, "scores.txt");
 
     free_grid(size, grid);

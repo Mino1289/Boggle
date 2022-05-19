@@ -81,6 +81,8 @@ void save_game(Player player, const char* file_path);
  */
 void read_games(const char* file_path, int* size, Player** players);
 
+void swapPlayer(Player* playerlist, int index1, int index2);
+
 /**
  * @brief Print the playerlist.
  *
@@ -88,7 +90,7 @@ void read_games(const char* file_path, int* size, Player** players);
  * @param playerlist Player* - the list of players.
  * @param size int - the number of players.
  */
-void print_playerlist(FILE* stream, Player* playerlist, int size);
+void orderAndPrint_playerlist(FILE* stream, Player* playerlist, int size);
 
 /**
  * @brief Get an integer from the user
@@ -108,6 +110,11 @@ int get_integer_input(const char* message, int min, int max);
  * @param input char** - the string entered by the user (by address).
  */
 void get_string_input(const char* message, int* size, char** input);
+
+void clear();
+
+void wait(int seconds);
+
 
 /**
  * @brief Start a game.

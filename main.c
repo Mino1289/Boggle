@@ -7,71 +7,37 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		seed = atoi(argv[1]);
 	}
-	printf("%lld\n", seed);
 	srand(seed); 
-	/*int size = 4; 
-	char** grid = create_grid(size);
-	grid = fill_grid_algo(size, grid);
 
-	print_grid(size, grid); */
-	char c = gen_rand_char();
-	printf("%d = %c\n", c,c);
-
-
-	// TEST |
-	char* word=NULL;// = (char*) malloc(sizeof(char));
-	int wordlen;
-	get_string_input("Find a word in the grid:", &wordlen, &word);
-	printf("%s\n", word);
-	if (search2D(size, grid, word)) {
-		printf("%s is in the grid\n", word);
-	} else {
-		printf("%s is not in the grid\n", word);
-	}
-	//TEST ^
-
-	// int k;
-	// Player* playerlist = read_games("scores.txt", &k);
-	// for (int i = 0; i < k; i++) {
-	// 	printf("%s\t%.2f\n", playerlist[i].pseudo, playerlist[i].score);
-	// }
-
-	// free_grid(size, grid);
-	int reponse_utilisateur; // valeur entrée par l'utilisateur 
-	// Au démarrage on propose à l’utilisateur un menu affichant trois options:
-		do{
-		printf ("bienvenu");
-		printf("Que souhaitez-vous effectuer?\n Si vous souhaitez démarrer une partie tapez 1 \n Si vous souhaitez afficher les meilleurs scores tapez 2\n Si vous souhaitez quitter tapez 3 "); // question de départ à l'utilisateur 
-		}while (reponse_utilisateur==1 || reponse_utilisateur ==2 || reponse_utilisateur ==3);
-
-		do {
-            scanf("%d",&reponse_utilisateur);    //on lit le choix du joueur
-            if ((reponse_utilisateur!=1) && (reponse_utilisateur!=2) && (reponse_utilisateur!=3))  //on verifie ce que l'utilisateur a entré avec un message d'erreur
-            {
-                printf("Impossible, choisir 0, 1 ou 2\n");
-            }
-        }while ((reponse_utilisateur!=1) && (reponse_utilisateur!=2) && (reponse_utilisateur!=3));
-		
-		switch (reponse_utilisateur){
+	do {
+		clear();
+		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 3);
+		int k;
+		Player* playerlist = (Player*) malloc(sizeof(Player));
+		switch (reponse){
 			case 1 :	// si l'utilisateur souhaite démarer une partie
+				play();
 				break;
-			case 2 : // si l'utilisateur souhaite afficher les scores 
+			case 2 : // si l'utilisateur souhaite afficher les scores
+				read_games("scores.txt", &k, &playerlist);
+				clear();
+				printf("Voici la liste des scores :\n");
+				printf("Nom\tScore\tTaille\tTemps\n");
+				orderAndPrint_playerlist(stdout, playerlist, k);
+				wait(2);
+				int n;
+				char* input = NULL;
+				get_string_input("Appuyez sur une touche pour continuer",&n, &input);
+				if (input != NULL) {
+					free(input);
+					break;
+				}
 				break;
-			case 3 : // si l'utilisateur souhaite quitter et sauvegarder 
-			/*if (save(g1, i,joueur1,joueur2) == 1) { //on appelle la fonction save pour que les donne rentre dna sle fichier
-                            printf("Sauvegarde reussie");
-                            return 0;
-                        } else {
-                            printf("Erreur de sauvegarde...");
-                            return 0;
-                        }*/
+			case 3 : // si l'utilisateur souhaite quitter le jeu
+				exit(EXIT_SUCCESS);
 				break;
 		}
-
-
-	// Player player = play();
-	// printf("%s\t%.2f\n", player.pseudo, player.score);
-
-	free_grid(size, grid);
+		wait(2);
+	} while (1);
 	return EXIT_SUCCESS;
 }
