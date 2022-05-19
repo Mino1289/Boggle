@@ -104,7 +104,7 @@ Boolean valid_word(const char* word) {
     char line[50];
     Boolean found = FALSE;
     while (fgets(line, sizeof(line), file) != NULL && !found) {
-        if (strcmp(line, word) == 0) {
+        if (strncmp(line, word, strlen(word)-1) == 0) {
             found = TRUE;
         }
     }
@@ -123,7 +123,7 @@ float score(int size, int* sizewords) {
 
 void save_game(Player player, const char* file_path) {
     FILE* file = fopen(file_path, "a");
-    fprintf(file, "%s\t%.2f", player.pseudo, player.score);
+    fprintf(file, "%s\t%.2f\t%d\t%d\n", player.pseudo, player.score, player.sizegrid, player.timeplayed);
     fclose(file);
 }
 
@@ -181,7 +181,6 @@ void get_string_input(const char* message, int* size, char** input) {
     char temp[MAX_CHAR_ARRAY_LENGTH];
     scanf("%s", temp);
     int k = strlen(temp)+1, i;
-    printf("%d\n", k);
     (*input) = malloc(sizeof(char)*k);
 
     for (i = 0; i < k; i++) {
@@ -222,12 +221,18 @@ Player play() {
 
     time_t debut = time(0);
     int size = get_integer_input("Choisissez la taille de votre grille (4-8): ", 4, 8);
+    player.sizegrid = size;
+
     char** grid = create_grid(size);
     grid = fill_grid_algo(size, grid);
+    
     double playtime = (double) get_integer_input("Choisissez le temps de jeu (60s-180s): ", 60, 180);
+    player.timeplayed = playtime;
     
     int* wordslen = (int*) malloc(sizeof(int));
-    int sizewords = 0;
+    int sizewords = 0, iter = 1;
+    double dtime = 0;
+
     print_grid(size, grid);
     do {
         int sizeword = 0, i = 0;
@@ -236,27 +241,32 @@ Player play() {
         get_string_input("Entrez un mot: ", &sizeword, &word);
         if (search2D(size, grid, word) && valid_word(word)) {
             printf("Le mot %s est dans la grille\n", word);
-            wordslen[i] = sizeword;
+            wordslen[i] = sizeword-1;
             i++;
             wordslen = realloc(wordslen, sizeof(char*)*(i));
         } else {
             printf("Le mot %s n'est pas dans la grille\n", word);
         }
-        if ((i+1) % 3 == 0) {
+        if (iter % 3 == 0){
             #ifdef _WIN32
                 system("cls");
             #else
                 system("clear");
             #endif
-        print_grid(size, grid);
+            print_grid(size, grid);
         }
+        iter++;
+
         sizewords = i;
         free(word);
-    } while (difftime(debut, time(0)) < playtime);
+        dtime = difftime(time(0), debut);
+        printf("Temps écoulé : %.2fs sur %.2f\n", dtime, playtime);
+    } while (dtime < playtime);
     player.score = score(sizewords, wordslen);
     printf("C'est fini, votre score est de %.2f\n", player.score);
     save_game(player, "scores.txt");
 
+    free_grid(size, grid);
     free(wordslen);
     return player;
 }
