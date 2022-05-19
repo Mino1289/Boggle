@@ -241,8 +241,8 @@ Player play() {
         }
 
         if (i <= n) {
-            printf("Le pseudo %s a déjà été utilisé.\n", name);
-            printf("Vous ne pouvez pas le réutiliser.\n");
+            printf("Le pseudo %s a d%cja %ct%c utilis%c.\n", name, ACCENT_E, ACCENT_E, ACCENT_E, ACCENT_E);
+            printf("Vous ne pouvez pas le r%cutiliser.\n", ACCENT_E);
             yes = 0;
         } else {
             memcpy(player.pseudo, name, sizename);
@@ -270,23 +270,27 @@ Player play() {
         fprintf(stderr, "ERROR: Could not allocate memory for wordslen\n");
         return player;
     }
+    // char** words = (char**) malloc(sizeof(char*));
 
-    int sizewords = 0, iter = 1;
-    double dtime = 0;
+    int sizewords = 0; // taille du tableau de taille de mot
+    int iter = 1; // nombre d'itération
+    double dtime = 0; // temps écoulé
 
     print_grid(size, grid);
     do {
-        int sizeword = 0, i = 0;
+        int sizeword = 0; // taille du mot
         char* word = NULL;
 
         get_string_input("Entrez un mot: ", &sizeword, &word);
         if (search2D(size, grid, word)) {
             if (valid_word(word)) {
                 printf("Le mot %s est dans la grille\n", word);
-                wordslen[i] = sizeword-1;
-  
-                i++;
-                wordslen = realloc(wordslen, sizeof(int)*(i+1));
+                wordslen[sizewords] = sizeword-1;
+                // memcpy(words[sizewords], word, sizeword);
+
+                // words = realloc(words, sizeof(char*)*(sizewords));
+                wordslen = realloc(wordslen, sizeof(int)*(sizewords+1));
+                sizewords++;
             } else {
                 printf("Le mot %s n'est pas dans le dictionnaire\n", word);
             }
@@ -300,11 +304,14 @@ Player play() {
         }
         iter++;
 
-        sizewords = i;
-        free(word);
         dtime = difftime(time(0), debut);
-        printf("Temps %ccoul%c : %.2fs sur %.2f\n", ACCENT_E, ACCENT_E,dtime, playtime);
+        printf("Temps %ccoul%c : %.0fs sur %.0f\n", ACCENT_E, ACCENT_E, dtime, playtime);
     } while (dtime < playtime);
+    // printf("%d mots trouvé:\n :", sizewords);
+    // for (int i = 0; i < sizewords; i++) {
+    //     printf(" %s", words[i]);
+    // }
+    // printf("\n");
     player.score = score(sizewords, wordslen);
     printf("C'est fini, votre score est de %.2f\n", player.score);
     wait(2);
