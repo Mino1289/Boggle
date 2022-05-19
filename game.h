@@ -4,6 +4,11 @@
 #include <grid.h>
 
 #define MAX_CHAR_ARRAY_LENGTH 25
+#ifdef _WIN32
+    #define ACCENT_E 130
+#else 
+    #define ACCENT_E 101
+#endif
 
 
 typedef struct Player {
