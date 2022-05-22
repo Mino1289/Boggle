@@ -4,10 +4,14 @@
 #include <grid.h>
 
 #define MAX_CHAR_ARRAY_LENGTH 25
+
 #ifdef _WIN32
     #define ACCENT_E 130
+    #define ACCENT_A 133
 #else 
+//linux : pas d'accent
     #define ACCENT_E 101
+    #define ACCENT_A 97
 #endif
 
 
