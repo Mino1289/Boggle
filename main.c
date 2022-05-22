@@ -11,6 +11,13 @@ int main(int argc, char* argv[]) {
 
 	do {
 		clear();
+		printf("seed = %lld\n", seed);
+		printf("\n    ____  ____  ______________    ______  \n");
+		printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
+		printf("  / __  / / / / / __/ / __/ /   / __/     \n");
+		printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
+		printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
+                                        
 		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 3);
 		int k;
 		Player* playerlist = (Player*) malloc(sizeof(Player));
@@ -37,7 +44,6 @@ int main(int argc, char* argv[]) {
 				exit(EXIT_SUCCESS);
 				break;
 		}
-		wait(2);
 	} while (1);
 	return EXIT_SUCCESS;
 }
