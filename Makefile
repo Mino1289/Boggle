@@ -38,9 +38,6 @@ $(LIBTARGET): $(LIBSOURCEOFILE)
 .c.o:
 	$(CXX) $(CFLAGS) $(INCLUDEDIR) -c -o $@ $<
 
-save: $(TARGET)
-	$(EXPORT) $(TARGET) > $(EXESOURCE).txt
-
 clean: 
 	$(CLEANCMD)
 	@echo CLEAN
