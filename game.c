@@ -199,10 +199,10 @@ void get_string_input(const char* message, int* size, char** input) {
     printf("%s\n", message);
     char temp[MAX_CHAR_ARRAY_LENGTH];
     scanf("%s", temp);
-    int k = strlen(temp)+1, i;
+    int k = strlen(temp)+1;
     (*input) = malloc(sizeof(char)*k);
 
-    for (i = 0; i < k; i++) {
+    for (int i = 0; i < k; i++) {
         (*input)[i] = temp[i];
     }
     (*input)[k] = '\0';
@@ -244,7 +244,7 @@ Player play() {
             printf("Vous ne pouvez pas le r%cutiliser.\n", ACCENT_E);
             yes = 0;
         } else {
-            memcpy(player.pseudo, name, sizename);
+            strcpy(player.pseudo, name);
             yes = 1;
         }
         free(gamelist);
@@ -306,13 +306,15 @@ Player play() {
                         fprintf(stderr, "ERROR: Could not allocate memory for words[%d]\n", wordsize);
                         return player;
                     }
-                    for (int i = 0; i < sizeword; i++) {
-                        words[wordsize][i] = word[i];
-                    }
+                    strcpy(words[wordsize], word);
 
                     wordsize++;
-                    wordslen = realloc(wordslen, sizeof(int)*(wordsize));
+
+                    wordslen = realloc(wordslen, sizeof(int)*(wordsize+1));
                     wordslen[wordsize] = 0;
+
+                    words = realloc(words, sizeof(char*)*(wordsize+1));
+                    // free(word); // ça fait crash alo ?
                 } else {
                     // mots déja trouvé
                     printf("Vous avez d%cja trouv%c le mot %s\n", ACCENT_E, ACCENT_E, word);
@@ -328,20 +330,30 @@ Player play() {
             wait(1);
             clear();
             print_grid(size, grid);
+            for (int i = 0; i < wordsize; i++) {
+                printf("%s ", words[i]);
+            }
+            printf("\n");
         }
         iter++;
 
         dtime = difftime(time(0), debut);
-        printf("Temps %ccoul%c : %.0fs sur %.0f\n", ACCENT_E, ACCENT_E, dtime, playtime);
+        printf("Temps %ccoul%c : %.0fs sur %.0fs\n", ACCENT_E, ACCENT_E, dtime, playtime);
     } while (dtime < playtime);
     printf("%d mots trouv%cs:\n", wordsize, ACCENT_E);
+    printf("Mot : Taille\n");   
     for (int i = 0; i < wordsize; i++) {
-        printf("%s, ", words[i]);
+        printf("%s : %d\n", words[i], wordslen[i]);
     }
     printf("\n");
     player.score = score(wordsize, wordslen);
     printf("C'est fini, votre score est de %.2f\n", player.score);
-    wait(5);
+    int n;
+    char* input = NULL;
+    get_string_input("Appuyez sur une touche pour continuer", &n, &input);
+    if (input != NULL) {
+        free(input);
+    }
     save_game(player, "scores.txt");
 
     free_grid(size, grid);

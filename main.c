@@ -11,7 +11,6 @@ int main(int argc, char* argv[]) {
 
 	do {
 		clear();
-		printf("seed = %lld\n", seed);
 		printf("\n    ____  ____  ______________    ______  \n");
 		printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
 		printf("  / __  / / / / / __/ / __/ /   / __/     \n");
