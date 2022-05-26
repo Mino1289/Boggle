@@ -11,14 +11,10 @@ int main(int argc, char* argv[]) {
 
 	do {
 		clear();
-		printf("\n    ____  ____  ______________    ______  \n");
-		printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
-		printf("  / __  / / / / / __/ / __/ /   / __/     \n");
-		printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
-		printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
-                                        
+        print_logo();
 		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 4);
 		clear();
+		print_logo();
 		int k, scoretype, order;
 		Player* playerlist = (Player*) malloc(sizeof(Player));
 		Word pseudotofind, input;
@@ -27,7 +23,8 @@ int main(int argc, char* argv[]) {
 				play();
 				break;
 			case 2 : // si l'utilisateur souhaite afficher les scores // trie etc
-				if (k == 0) {
+				if (k < 0) {
+					printf("k = %d\n", k);
 					printf("Il n'y a pas de score sauvegard%c pour l'instant.\n", ACCENT_E);
 					wait(3);
 					continue;
@@ -35,10 +32,12 @@ int main(int argc, char* argv[]) {
 				scoretype = get_integer_input("Afficher tous les scores\t1\nChercher un joueur\t\t2\nQuitter\t\t\t\t3\n", 1, 3);
 				read_games("scores.txt", &k, &playerlist);
 				clear();
+				print_logo();
 				switch (scoretype) {
 				case 1:
 					order = get_integer_input("Trier la liste de joueur par :\nSCORE\t\t1\nSCORE+TEMPS\t2\nSCORE+TAILLE\t3\nPSEUDO\t\t4\n", 1, 4);
 					clear();
+					print_logo();
 					if (order >= 2 && order <= 3) {
 						printf("Tri par score, et si %cgalit%c, par %s.\n", ACCENT_E, ACCENT_E, order == 2 ? "temps croissant" : "taille croissante");
 					}

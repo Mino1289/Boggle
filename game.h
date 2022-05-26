@@ -217,6 +217,12 @@ int get_integer_input(const char* message, int min, int max);
 Word get_string_input(const char* message);
 
 /**
+ * @brief Prints the logo 'BOGGLE' to stdin.
+ * 
+ */
+void print_logo();
+
+/**
  * @brief Clear stdin.
  * 
  */

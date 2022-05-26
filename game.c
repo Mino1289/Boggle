@@ -298,6 +298,14 @@ Word get_string_input(const char* message) {
     return word;
 }
 
+void print_logo() {
+    printf("\n    ____  ____  ______________    ______  \n");
+    printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
+    printf("  / __  / / / / / __/ / __/ /   / __/     \n");
+    printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
+    printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
+}
+
 void clear() {
     #ifdef _WIN32
         system("cls");
@@ -378,6 +386,8 @@ Player play() {
     int iter = 1; // nombre d'itération
     double dtime = 0; // temps écoulé
 
+    clear();
+    print_logo();
     print_grid(size, grid);
     time_t debut = time(0);
     GrpWords* grpwords = read_dico();
@@ -426,9 +436,10 @@ Player play() {
            printf("Le mot %s n'est pas dans la grille\n", word.str);
         }
         freeWord(&word);
-        if (iter % 3 == 0){
+        if (iter % 2 == 0){
             wait(1);
             clear();
+            print_logo();
             print_grid(size, grid);
             for (int i = 0; i < wordsize; i++) {
                 printf("%s ", words[i]);
