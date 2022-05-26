@@ -37,7 +37,7 @@ void print_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
         printf("%c%c%c%c", i==0 ? 200 : 202, 205, 205, 205);
     }
-    printf("%c\n\n", 188);
+    printf("%c\n", 188);
 }
 #else
 void print_grid(int size, char** grid) {
