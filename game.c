@@ -71,21 +71,21 @@ Boolean is_around(int size, char** grid, int* row, int* col, char c, char next) 
     }
 }
 
-Boolean search2D(int size, char** grid, const char* word) {
+Boolean search2D(int size, char** grid, Word word) {
 
-    int sizeword = strlen(word);
+    int sizeword = word.length;
     int sizecoords;
-    int** coords = locate_char(size, grid, word[0], &sizecoords);
+    int** coords = locate_char(size, grid, word.str[0], &sizecoords);
     int k = 0;
     Boolean found = FALSE;
     while (k < sizecoords && !found) {
         int row = coords[k][0];
         int col = coords[k][1];
         int i = 1;
-        while (i < sizeword && is_around(size, grid, &row, &col, word[i-1], word[i])) {
+        while (i < sizeword-1 && is_around(size, grid, &row, &col, word.str[i-1], word.str[i])) {
             i++;
         }
-        if (i == sizeword) {
+        if (i == sizeword-1) {
             found = TRUE;
         }
         k++;
@@ -94,22 +94,69 @@ Boolean search2D(int size, char** grid, const char* word) {
     return found;
 }
 
-Boolean valid_word(const char* word) {
-    // int sizeword = strlen(word)-1; // on enlève le \0
+GrpWords* read_dico() {
     const char* file_path = "dico.txt";
     FILE* file = fopen(file_path, "r");
     if (file == NULL) {
         fprintf(stderr, "ERROR: Could not open file %s\n", file_path);
-        return FALSE;
+        return NULL;
     }
-    char line[50];
-    Boolean found = FALSE;
-    while (fscanf(file, "%s", line) != EOF && !found) {
-        if (strcmp(line, word) == 0) {
-            found = TRUE;
+    GrpWords* grpwords = malloc(sizeof(GrpWords)*NB_LETTER); // we know there are 26 groups (26 letters)
+    if (grpwords == NULL) {
+        fprintf(stderr, "ERROR: Could not allocate memory for grpwords.\n");
+        return NULL;
+    }
+    for (int i = 0; i < NB_LETTER; i++) {
+        grpwords[i].nbWord = 1;
+        grpwords[i].words = (Word*) malloc(sizeof(Word));
+        grpwords[i].lettre = 'a' + i;
+    }
+    int i = 0, k = 0;
+    Boolean good = TRUE;
+    while (good) {
+        char buffer [MAX_CHAR_ARRAY_LENGTH];
+        int len;
+        fscanf(file, "%s\t%d", buffer, &len);
+        if (i != buffer[0] - 'a') { // changement de lettre => on remet k à 0
+            k = 0;  
+            i = buffer[0] - 'a'; 
         }
+
+        grpwords[i].words[k].length = len; // longueur
+        grpwords[i].words[k].str = malloc(sizeof(char)*(grpwords[i].words[k].length+1)); //with the '\0'
+        strncpy(grpwords[i].words[k].str, buffer, grpwords[i].words[k].length+1); 
+        
+        grpwords[i].nbWord++;
+        grpwords[i].words = realloc(grpwords[i].words, sizeof(Word)*(grpwords[i].nbWord));
+        
+        if (feof(file)) {
+            good = FALSE;
+        }
+        k++; //should be == grpwords[i].nbWord;
     }
     fclose(file);
+    return grpwords;
+}
+
+Boolean valid_word(const char* word, GrpWords* grpwords) {
+    char frstletter = word[0];
+    int indexletter = frstletter - 'a';
+
+    Boolean found = FALSE;
+    int bas = 0;
+    int haut = grpwords[indexletter].nbWord - 1;
+    int milieu;
+    while (bas <= haut && !found) {
+        milieu = (bas + haut) / 2;
+        int cmp = strcmp(grpwords[indexletter].words[milieu].str, word);
+        if (cmp == 0) {
+            found = TRUE;
+        } else if (cmp < 0) {
+            bas = milieu + 1;
+        } else {
+            haut = milieu - 1;
+        }
+    }
     return found;
 }
 
@@ -186,6 +233,7 @@ int get_integer_input(const char* message, int min, int max) {
     do {
         printf("%s", message);
         scanf("%s", inputstring);
+        fflush(stdin);
         tmp = atoi(inputstring);
         if (tmp >= min && tmp <= max) {
             input = tmp;
@@ -195,18 +243,18 @@ int get_integer_input(const char* message, int min, int max) {
     return input;
 }
 
-void get_string_input(const char* message, int* size, char** input) {
+Word get_string_input(const char* message) {
     printf("%s\n", message);
     char temp[MAX_CHAR_ARRAY_LENGTH];
     scanf("%s", temp);
+    fflush(stdin);
     int k = strlen(temp)+1;
-    (*input) = malloc(sizeof(char)*k);
+    char* str = (char*) malloc(sizeof(char)*k);
+    Word word = (Word) {k, str};
 
-    for (int i = 0; i < k; i++) {
-        (*input)[i] = temp[i];
-    }
-    (*input)[k] = '\0';
-    *size = k;
+    strncpy(word.str, temp, k);
+        
+    return word;
 }
 
 void clear() {
@@ -224,37 +272,47 @@ void wait(int seconds) {
     }
 }
 
+void freeWord(Word *word) {
+    free(word->str);
+    *word = (Word) {0, NULL}; // Légal ?
+}
+
+void freeGrpWords(GrpWords *grpwords) {
+    for (int j = 0; j < grpwords->nbWord-1; j++) {
+        freeWord(&(grpwords->words[j]));
+    }
+    free(grpwords->words);
+    *grpwords = (GrpWords) {'\0', NULL, 0};
+}
+
 Player play() {
     Player player;
     int yes=1;
     do {
-        char* name = NULL;
-        int sizename;
-        get_string_input("Choisissez un pseudo : ", &sizename, &name);
+        Word pseudo = get_string_input("Choisissez un pseudo : ");
         
         int n, i = 0;
         Player* gamelist = (Player*) malloc(sizeof(Player));
         read_games("scores.txt", &n, &gamelist);
-        while (i <= n && strcmp(gamelist[i].pseudo, name) != 0) {
+        while (i <= n && strcmp(gamelist[i].pseudo, pseudo.str) != 0) {
             i++;
         }
 
         if (i <= n) {
-            printf("Le pseudo %s a d%cja %ct%c utilis%c.\n", name, ACCENT_E, ACCENT_E, ACCENT_E, ACCENT_E);
+            printf("Le pseudo %s a d%cja %ct%c utilis%c.\n", pseudo.str, ACCENT_E, ACCENT_E, ACCENT_E, ACCENT_E);
             printf("Vous ne pouvez pas le r%cutiliser.\n", ACCENT_E);
             yes = 0;
         } else {
-            strcpy(player.pseudo, name);
+            strcpy(player.pseudo, pseudo.str);
             yes = 1;
         }
         free(gamelist);
-        free(name);
+        free(pseudo.str);
     } while (yes == 0);
     printf("Vous allez jouer en tant que : %s\n", player.pseudo);
     
     //  // ^ faut demander au joueur un pseudo, si il est pas pris, il le prend, sinon il en choisi un autre.
 
-    time_t debut = time(0);
     int size = get_integer_input("Choisissez la taille de votre grille (4-8): ", 4, 8);
     player.sizegrid = size;
 
@@ -280,33 +338,34 @@ Player play() {
     double dtime = 0; // temps écoulé
 
     print_grid(size, grid);
+    time_t debut = time(0);
+    GrpWords* grpwords = read_dico();
     do {
-        int sizeword = 0; // taille du mot
-        char* word = NULL;
+        Word word = get_string_input("Entrez un mot: ");
 
-        get_string_input("Entrez un mot: ", &sizeword, &word);
         if (search2D(size, grid, word)) {
+        
             // mots dans la grille
-            if (valid_word(word)) {
+            if (valid_word(word.str, grpwords)) {
                 // mots dans le dico
                 Boolean found = FALSE;
                 int i = 0;
                 while (i < wordsize && !found) {
-                    if (strcmp(words[i], word) == 0) {
+                    if (strcmp(words[i], word.str) == 0) {
                         found = TRUE;
                     }
                     i++;
                 }
                 if (!found) {
                     // mots pas encore trouvé
-                    printf("Le mot %s est dans la grille\n", word);
-                    wordslen[wordsize] = sizeword-1;
-                    words[wordsize] = malloc(sizeof(char)*sizeword);
+                    printf("Le mot %s est dans la grille\n", word.str);
+                    wordslen[wordsize] = word.length-1;
+                    words[wordsize] = malloc(sizeof(char)*word.length);
                     if (words[wordsize] == NULL) {
                         fprintf(stderr, "ERROR: Could not allocate memory for words[%d]\n", wordsize);
                         return player;
                     }
-                    strcpy(words[wordsize], word);
+                    strcpy(words[wordsize], word.str);
 
                     wordsize++;
 
@@ -317,15 +376,15 @@ Player play() {
                     // free(word); // ça fait crash alo ?
                 } else {
                     // mots déja trouvé
-                    printf("Vous avez d%cja trouv%c le mot %s\n", ACCENT_E, ACCENT_E, word);
+                    printf("Vous avez d%cja trouv%c le mot %s\n", ACCENT_E, ACCENT_E, word.str);
                 }
             } else {
-                printf("Le mot %s n'est pas dans le dictionnaire\n", word);
+                printf("Le mot %s n'est pas dans le dictionnaire\n", word.str);
             }
         } else {
-           printf("Le mot %s n'est pas dans la grille\n", word);
+           printf("Le mot %s n'est pas dans la grille\n", word.str);
         }
-        free(word);
+        freeWord(&word);
         if (iter % 3 == 0){
             wait(1);
             clear();
@@ -348,15 +407,19 @@ Player play() {
     printf("\n");
     player.score = score(wordsize, wordslen);
     printf("C'est fini, votre score est de %.2f\n", player.score);
-    int n;
-    char* input = NULL;
-    get_string_input("Appuyez sur une touche pour continuer", &n, &input);
-    if (input != NULL) {
-        free(input);
+
+    Word input = get_string_input("Appuyez sur une touche pour continuer");
+    if (input.str != NULL) {
+        freeWord(&input);
     }
     save_game(player, "scores.txt");
 
     free_grid(size, grid);
     free(wordslen);
+
+    for (int i = 0; i < NB_LETTER; i++) {
+        freeGrpWords(&(grpwords[i]));
+    }
+    free(grpwords);
     return player;
 }

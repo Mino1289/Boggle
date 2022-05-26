@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 		printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
 		printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
                                         
-		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 3);
+		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 4);
 		int k;
 		Player* playerlist = (Player*) malloc(sizeof(Player));
 		switch (reponse){
@@ -31,17 +31,20 @@ int main(int argc, char* argv[]) {
 				printf("Nom\tScore\tTaille\tTemps\n");
 				orderAndPrint_playerlist(stdout, playerlist, k);
 				wait(2);
-				int n;
-				char* input = NULL;
-				get_string_input("Appuyez sur une touche pour continuer",&n, &input);
-				if (input != NULL) {
-					free(input);
+
+				Word input = get_string_input("Appuyez sur une touche pour continuer");
+				if (input.str != NULL) {
+					freeWord(&input);
 					break;
 				}
 				break;
 			case 3 : // si l'utilisateur souhaite quitter le jeu
 				exit(EXIT_SUCCESS);
 				break;
+			case 4 :
+				printf("DEBUG\n");
+				printf("Aucune code à debug.\n");
+				wait(5);
 		}
 	} while (1);
 	return EXIT_SUCCESS;
