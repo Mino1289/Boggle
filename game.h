@@ -142,11 +142,60 @@ void swapPlayer(Player* playerlist, int index1, int index2);
 /**
  * @brief Print the playerlist.
  *
- * @param stream FILE* - the stream to print to.
  * @param playerlist Player* - the list of players.
  * @param size int - the number of players.
+ * @param playercmp func* - Pointer to the compare function.
  */
-void orderAndPrint_playerlist(FILE* stream, Player* playerlist, int size);
+Player* orderPlayerlist(Player* playerlist, int size, int (*playercmp)(Player p1, Player p2));
+
+/**
+ * @brief Compare two Player by their score.
+ * 
+ * @param p1 Player - the player to compare.
+ * @param p2 Player - the player to compare.
+ * @return int 0 if their score are the same, -1 if score2 > score1, and 1 if score1 > score2.
+ */
+int playercmpscore(Player p1, Player p2);
+
+/**
+ * @brief Compare two Player by their score and the size of the grid they played on if their score are equal.
+ * We suppose same score and smaller grid id better.
+ * @param p1 Player - the player to compare.
+ * @param p2 Player - the player to compare. 
+ * @return int 1 if (score1 > score2) OR (same score AND sizegrid1 < sizegrid2)
+ *            -1 if (score2 > score1) OF (same score AND sizegrid1 > sizegrid2)
+ *             0 if (same score AND same sizegrid)  
+ */
+int playercmpscoreANDsize(Player p1, Player p2);
+
+/**
+ * @brief Compare two Player by their score and the time they played on if their score are equal.
+ * We suppose same score and less time is better.
+ * @param p1 Player - the player to compare.
+ * @param p2 Player - the player to compare. 
+ * @return int 1 if (score1 > score2) OR (same score AND time1 < time2)
+ *            -1 if (score2 > score1) OF (same score AND time1 > time2)
+ *             0 if (same score AND same time)  
+ */
+int playercmpscoreANDtime(Player p1, Player p2);
+
+/**
+ * @brief Compare two Player by their pseudo (using strcmp)
+ * 
+ * @param p1 Player - the player to compare.
+ * @param p2 Player - the player to compare.
+ * @return int -strcmp(p1.pseudo, p2.pseudo)
+ */
+int playercmppseudo(Player p1, Player p2);
+
+/**
+ * @brief Print the playerlist in a stream.
+ * 
+ * @param stream FILE* - The stream to print to.
+ * @param playerlist Player* - The list of the players.
+ * @param size int - The size of the playerlist.
+ */
+void printPlayerlist(FILE* stream, Player* playerlist, int size);
 
 /**
  * @brief Get an integer from the user

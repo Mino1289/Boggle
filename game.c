@@ -207,25 +207,66 @@ void swapPlayer(Player* playerlist, int index1, int index2) {
     playerlist[index2] = tmp;
 }
 
-void orderAndPrint_playerlist(FILE* stream, Player* playerlist, int size) {
-    //on bubble sort puis on print tout
+Player* orderPlayerlist(Player* playerlist, int size, int (*playercmp)(Player p1, Player p2)) {
+    //on bubble 
     Boolean weswap;
     int loop = 0;
     do {
         weswap = FALSE;
         for (int i = 0; i < size-1-loop; i++) {
-            if (playerlist[i].score < playerlist[i+1].score) {
+            if (playercmp(playerlist[i], playerlist[i+1]) < 0) {
                 swapPlayer(playerlist, i, i+1);
                 weswap = TRUE;
             }
         }
         loop++;
     } while (weswap);
+    return playerlist;
+}
 
+int playercmpscore(Player p1, Player p2) {
+    if (p1.score > p2.score) {
+        return 1;
+    } else if (p1.score < p2.score) {
+        return -1;
+    }
+    return 0; // equal
+}
+
+int playercmpscoreANDsize(Player p1, Player p2) {
+    int cmpscore = playercmpscore(p1, p2);
+    if (cmpscore == 0) {
+        if (p1.sizegrid < p2.sizegrid) {
+            return 1;
+        } else if (p1.sizegrid > p2.sizegrid) {
+            return -1;
+        }
+    }
+    return cmpscore;
+}
+
+int playercmpscoreANDtime(Player p1, Player p2) {
+    int cmpscore = playercmpscore(p1, p2);
+    if (cmpscore == 0) {
+        if (p1.timeplayed < p2.timeplayed) {
+            return 1;
+        } else if (p1.timeplayed > p2.timeplayed) {
+            return -1;
+        }
+    }
+    return cmpscore;
+}
+
+int playercmppseudo(Player p1, Player p2) {
+    return -strcmp(p1.pseudo, p2.pseudo);
+}
+
+void printPlayerlist(FILE* stream, Player* playerlist, int size) {
     for (int i = 0; i < size; i++) {
         fprintf(stream, "%s\t%.2f\t%d\t%d\n", playerlist[i].pseudo, playerlist[i].score, playerlist[i].sizegrid, playerlist[i].timeplayed);
     }
 }
+
 
 int get_integer_input(const char* message, int min, int max) {
     char inputstring[MAX_CHAR_ARRAY_LENGTH];
