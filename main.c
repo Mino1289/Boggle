@@ -7,12 +7,12 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		seed = atoi(argv[1]);
 	}
-	srand(seed); 
 
 	do {
+		srand(seed); // on change de seed à chaque tour + dans la démo on set un seed. 
 		clear();
         print_logo();
-		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nQUITTER\t3\n", 1, 4);
+		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nREGLES\t3\nQUITTER\t4\n", 1, 5);
 		clear();
 		print_logo();
 		int k, scoretype, order;
@@ -91,7 +91,6 @@ int main(int argc, char* argv[]) {
 						}
 					}
 					if (found) {
-						// clear();
 						printf("\nNom\tScore\tTaille\tTemps\n");
 			        	printPlayer(stdout, playerlist[milieu]);
 					} else {
@@ -108,11 +107,31 @@ int main(int argc, char* argv[]) {
 				default:
 					continue;
 				}
+			case 3 : // Afficher les règles
+				printf("\n R%cgles du jeu :\n", ACCENT_E1);
+				printf("\tLe but du jeu est de trouver des mots en utilisant des lettres accolées dans la grille.\n");
+				printf("\tPour ce faire, vous pouvez utiliser les lettres dans tous les sens possibles.\n");
+				printf("\tTant qu'il est possible de tracer un chemin passant par toutes les lettres.\n");
 				
-			case 3 : // si l'utilisateur souhaite quitter le jeu
+				srand(15435);
+				char** grid = create_grid(4);
+				grid = fill_grid_algo(4, grid);
+				print_grid(4, grid);
+				printf("On retrouve le mot \"maire\", en comman%cant en haut %c gauche vers la droite.\n",CEDILLE, ACCENT_A);
+				printf("Puis, au i on d%cscend d'une ligne et on continue vers la gauche jusqu'au e.\n\n", ACCENT_E);
+
+				wait(3);
+				input = get_string_input("Appuyez sur une touche pour continuer");
+				if (input.str != NULL) {
+					freeWord(&input);
+				}
+				break;
+				
+			case 4 : // si l'utilisateur souhaite quitter le jeu
+				clear();
 				exit(EXIT_SUCCESS);
 				break;
-			case 4 :
+			case 5 :
 				printf("DEBUG\n");
 				printf("Aucun code à debug.\n");
 				wait(5);

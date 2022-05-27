@@ -8,10 +8,14 @@
 
 #ifdef _WIN32
     #define ACCENT_E 130
+    #define ACCENT_E1 131
     #define ACCENT_A 133
+    #define CEDILLE 135
 #else //linux : pas d'accent
-    #define ACCENT_E 101
+    #define ACCENT_E 101 
+    #define ACCENT_E1 101
     #define ACCENT_A 97
+    #define CEDILLE 99
 #endif
 
 /**
