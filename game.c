@@ -103,11 +103,15 @@ GrpWords* read_dico() {
     for (int i = 0; i < NB_LETTER; i++) {
         grpwords[i].nbWord = 1;
         grpwords[i].words = (Word*) malloc(sizeof(Word));
+        if (grpwords[i].words == NULL) {
+            fprintf(stderr, "ERROR: Could not allocate memory for grpwords[%d].word.\n", i);
+            return NULL;
+        }
         grpwords[i].lettre = 'a' + i;
     }
     int i = 0, k = 0;
-    Boolean good = TRUE;
-    while (good) {
+    
+    while (!feof(file)) {
         char buffer [MAX_CHAR_ARRAY_LENGTH];
         int len;
         fscanf(file, "%s\t%d", buffer, &len);
@@ -118,13 +122,17 @@ GrpWords* read_dico() {
 
         grpwords[i].words[k].length = len; // longueur
         grpwords[i].words[k].str = malloc(sizeof(char)*(grpwords[i].words[k].length+1)); //with the '\0'
+        if (grpwords[i].words[k].str == NULL) {
+            fprintf(stderr, "ERROR: Could not allocate memory for grpwords[%d].words[%d].str.\n", i, k);
+            return NULL;
+        }
         strncpy(grpwords[i].words[k].str, buffer, grpwords[i].words[k].length+1); 
         
         grpwords[i].nbWord++;
         grpwords[i].words = realloc(grpwords[i].words, sizeof(Word)*(grpwords[i].nbWord));
-        
-        if (feof(file)) {
-            good = FALSE;
+        if (grpwords[i].words == NULL) {
+            fprintf(stderr, "ERROR: Could not reallocate memory for grpwords[%d].\n", i);
+            return NULL;
         }
         k++; //should be == grpwords[i].nbWord;
     }
