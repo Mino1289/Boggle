@@ -44,14 +44,27 @@ typedef struct Word {
  * @brief Group all the mots by their first letter
  * 
  * @param lettre char - The first letter of the words
- * @param words Word* - The words
- * @param nbWords int - The number of words * 
+ * @param words Word* - A list of words
+ * @param nbWords int - The number of words 
  */
 typedef struct GrpWords {
     char lettre;
     Word* words;
     int nbWord;
 } GrpWords;
+
+/**
+ * @brief Represent a coordinate in the grid for a char.
+ * 
+ * @param c char - The char represented
+ * @param row short - The row of the char in the grid
+ * @param col short - The col of the char in the grid
+ */
+typedef struct Coord {
+    char c;
+    short row;
+    short col;
+} Coord;
 
 /**
  * @brief Locates all the occurrences of a character in a grid.
@@ -62,7 +75,7 @@ typedef struct GrpWords {
  * @param sizecoords int* - number of occurrences of c in the grid (passing by address).
  * @return int** - Array of coordinates of the occurrences of c in the grid. {{row, col}, {row, col}, ...}.
  */
-int** locate_char(int size, char** grid, char c, int* sizecoords);
+Coord* locate_char(int size, char** grid, char c, int* sizecoords);
 
 /**
  * @brief 

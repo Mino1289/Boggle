@@ -1,8 +1,8 @@
 #include <game.h>
 #include <grid.h>
 
-int** locate_char(int size, char** grid, char c, int* sizecoords) {
-    int** coords = malloc(sizeof(int*));
+Coord* locate_char(int size, char** grid, char c, int* sizecoords) {
+    Coord* coords = malloc(sizeof(Coord*));
     if (coords == NULL) {
         fprintf(stderr, "ERROR: Could not allocate memory for coords.\n");
         return NULL;
@@ -11,16 +11,10 @@ int** locate_char(int size, char** grid, char c, int* sizecoords) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (grid[i][j] == c) {
-                coords[k] = malloc(sizeof(int)*2);
-                if (coords[k] == NULL) {
-                    fprintf(stderr, "ERROR: Could not allocate memory for coords[%d].\n", k);
-                    return NULL;
-                }
-                coords[k][0] = i;
-                coords[k][1] = j;
+                coords[k] = (Coord) {c, i, j};
                 k++;
 
-                coords = realloc(coords, sizeof(int*)*(k+1));
+                coords = realloc(coords, sizeof(Coord)*(k+1));
                 if (coords == NULL) {
                     fprintf(stderr, "ERROR: Could not reallocate memory for coords[%d].\n",k);
                     return NULL;
@@ -75,12 +69,12 @@ Boolean search2D(int size, char** grid, Word word) {
 
     int sizeword = word.length;
     int sizecoords;
-    int** coords = locate_char(size, grid, word.str[0], &sizecoords);
+    Coord* coords = locate_char(size, grid, word.str[0], &sizecoords);
     int k = 0;
     Boolean found = FALSE;
     while (k < sizecoords && !found) {
-        int row = coords[k][0];
-        int col = coords[k][1];
+        int row = coords[k].row;
+        int col = coords[k].col;
         int i = 1;
         while (i < sizeword-1 && is_around(size, grid, &row, &col, word.str[i-1], word.str[i])) {
             i++;
