@@ -7,30 +7,31 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		seed = atoi(argv[1]);
 	}
+	srand(seed);
 
 	do {
-		srand(seed); // on change de seed à chaque tour + dans la démo on set un seed. 
 		clear();
+		printf("Bienvenue dans :");
         print_logo();
-		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nREGLES\t3\nQUITTER\t4\n", 1, 5);
+		int reponse = get_integer_input("Que souhaitez-vous faire ?\nJOUER\t\t\t1\nAFFICHER SCORES\t\t2\nAFFICHER REGLES\t\t3\nQUITTER LE JEU\t\t4\n", 1, 5);
 		clear();
 		print_logo();
-		int k, scoretype, order;
+		int k=0, scoretype, order;
 		Player* playerlist = (Player*) malloc(sizeof(Player));
-		Word pseudotofind, input;
+		Word pseudotofind;
 		switch (reponse) {
 			case 1 :	// si l'utilisateur souhaite démarer une partie
 				play();
 				break;
 			case 2 : // si l'utilisateur souhaite afficher les scores // trie etc
-				if (k < 0) {
+				read_games("scores.txt", &k, &playerlist);
+				if (k <= 0) {
 					printf("k = %d\n", k);
 					printf("Il n'y a pas de score sauvegard%c pour l'instant.\n", ACCENT_E);
 					wait(3);
 					continue;
 				}
 				scoretype = get_integer_input("Afficher tous les scores\t1\nChercher un joueur\t\t2\nQuitter\t\t\t\t3\n", 1, 3);
-				read_games("scores.txt", &k, &playerlist);
 				clear();
 				print_logo();
 				switch (scoretype) {
@@ -65,10 +66,7 @@ int main(int argc, char* argv[]) {
 
 					wait(2);
 
-					input = get_string_input("Appuyez sur une touche pour continuer");
-					if (input.str != NULL) {
-						freeWord(&input);
-					}
+					validate("Appuyez sur une touche pour continuer");
 					continue;
 				case 2:
 					pseudotofind = get_string_input("Donnez le pseudo d'un joueur pour le trouver.");
@@ -99,10 +97,7 @@ int main(int argc, char* argv[]) {
 					
 					wait(2);
 
-					input = get_string_input("Appuyez sur une touche pour continuer");
-					if (input.str != NULL) {
-						freeWord(&input);
-					}
+					validate("Appuyez sur une touche pour continuer");
 					continue;
 				default:
 					continue;
@@ -116,15 +111,13 @@ int main(int argc, char* argv[]) {
 				srand(15435);
 				char** grid = create_grid(4);
 				grid = fill_grid_algo(4, grid);
+				srand(seed);
 				print_grid(4, grid);
 				printf("On retrouve le mot \"maire\", en comman%cant en haut %c gauche vers la droite.\n",CEDILLE, ACCENT_A);
 				printf("Puis, au i on d%cscend d'une ligne et on continue vers la gauche jusqu'au e.\n\n", ACCENT_E);
 
 				wait(3);
-				input = get_string_input("Appuyez sur une touche pour continuer");
-				if (input.str != NULL) {
-					freeWord(&input);
-				}
+				validate("Appuyez sur une touche pour continuer");
 				break;
 				
 			case 4 : // si l'utilisateur souhaite quitter le jeu
@@ -133,8 +126,10 @@ int main(int argc, char* argv[]) {
 				break;
 			case 5 :
 				printf("DEBUG\n");
-				printf("Aucun code à debug.\n");
-				wait(5);
+				validate("Appuyez sur une touche pour continuer.");
+				// printf("Aucun code %c debug.\n", ACCENT_A);
+				// wait(5);
+				break;
 			default:
 				break;
 		}

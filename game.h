@@ -242,6 +242,13 @@ int get_integer_input(const char* message, int min, int max);
 Word get_string_input(const char* message);
 
 /**
+ * @brief Get an input, just a validation to the next step
+ * 
+ * @param message char* - the message to print to the user 
+ */
+void validate(const char* message);
+
+/**
  * @brief Prints the logo 'BOGGLE' to stdin.
  * 
  */
