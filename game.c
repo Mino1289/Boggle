@@ -173,7 +173,7 @@ float score(int size, int* sizewords) {
 
 void save_game(Player player, const char* file_path) {
     FILE* file = fopen(file_path, "a");
-    fprintf(file, "%s\t%.2f\t%d\t%d\n", player.pseudo, player.score, player.sizegrid, player.timeplayed);
+    printPlayer(file, player);
     fclose(file);
 }
 
@@ -263,9 +263,13 @@ int playercmppseudo(Player p1, Player p2) {
     return -strcmp(p1.pseudo, p2.pseudo);
 }
 
+void printPlayer(FILE* stream, Player player) {
+    fprintf(stream, "%s\t%.2f\t%d\t%d\n", player.pseudo, player.score, player.sizegrid, player.timeplayed);
+}
+
 void printPlayerlist(FILE* stream, Player* playerlist, int size) {
     for (int i = 0; i < size; i++) {
-        fprintf(stream, "%s\t%.2f\t%d\t%d\n", playerlist[i].pseudo, playerlist[i].score, playerlist[i].sizegrid, playerlist[i].timeplayed);
+        printPlayer(stream, playerlist[i]);
     }
 }
 

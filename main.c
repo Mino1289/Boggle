@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 					if (found) {
 						// clear();
 						printf("\nNom\tScore\tTaille\tTemps\n");
-			        	printf("%s\t%.2f\t%d\t%d\n", playerlist[milieu].pseudo, playerlist[milieu].score, playerlist[milieu].sizegrid, playerlist[milieu].timeplayed);
+			        	printPlayer(stdout, playerlist[milieu]);
 					} else {
 						printf("Le joueur %s, n'est pas dans la liste.\n", pseudotofind.str);
 					}

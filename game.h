@@ -202,6 +202,14 @@ int playercmpscoreANDtime(Player p1, Player p2);
 int playercmppseudo(Player p1, Player p2);
 
 /**
+ * @brief Print a player in a stream
+ * 
+ * @param stream FILE* - The stream to print to
+ * @param player Player - The player to print.
+ */
+void printPlayer(FILE* stream, Player player);
+
+/**
  * @brief Print the playerlist in a stream.
  * 
  * @param stream FILE* - The stream to print to.
