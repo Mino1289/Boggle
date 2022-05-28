@@ -7,136 +7,132 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		seed = atoi(argv[1]);
 	}
+	srand(seed);
 
 	do {
-		srand(seed); // on change de seed à chaque tour + dans la démo on set un seed. 
 		clear();
+		printf("Bienvenue dans :");
         print_logo();
-		int reponse = get_integer_input("Que voulez vous faire ?\nJOUER\t1\nSCORE\t2\nREGLES\t3\nQUITTER\t4\n", 1, 5);
+		int reponse = get_integer_input("Que souhaitez-vous faire ?\nJOUER\t\t\t1\nAFFICHER SCORES\t\t2\nAFFICHER REGLES\t\t3\nQUITTER LE JEU\t\t4\n", 1, 5);
 		clear();
 		print_logo();
-		int k, scoretype, order;
+		int k=0, scoretype, order;
 		Player* playerlist = (Player*) malloc(sizeof(Player));
-		Word pseudotofind, input;
+		Word pseudotofind;
 		switch (reponse) {
-			case 1 :	// si l'utilisateur souhaite démarer une partie
-				play();
-				break;
-			case 2 : // si l'utilisateur souhaite afficher les scores // trie etc
-				if (k < 0) {
-					printf("k = %d\n", k);
-					printf("Il n'y a pas de score sauvegard%c pour l'instant.\n", ACCENT_E);
-					wait(3);
-					continue;
-				}
-				scoretype = get_integer_input("Afficher tous les scores\t1\nChercher un joueur\t\t2\nQuitter\t\t\t\t3\n", 1, 3);
-				read_games("scores.txt", &k, &playerlist);
+		case 1 :	// si l'utilisateur souhaite démarer une partie
+			play();
+			break;
+		case 2 : // si l'utilisateur souhaite afficher les scores // trie etc
+			read_games("scores.txt", &k, &playerlist);
+			if (k <= 0) {
+				printf("k = %d\n", k);
+				printf("Il n'y a pas de score sauvegard%c pour l'instant.\n", ACCENT_E);
+				wait(3);
+				continue;
+			}
+			scoretype = get_integer_input("Afficher tous les scores\t1\nChercher un joueur\t\t2\nQuitter\t\t\t\t3\n", 1, 3);
+			clear();
+			print_logo();
+			switch (scoretype) {
+			case 1:
+				order = get_integer_input("Trier la liste de joueur par :\nSCORE\t\t1\nSCORE+TEMPS\t2\nSCORE+TAILLE\t3\nPSEUDO\t\t4\n", 1, 4);
 				clear();
 				print_logo();
-				switch (scoretype) {
+				if (order >= 2 && order <= 3) {
+					printf("Tri par score, et si %cgalit%c, par %s.\n", ACCENT_E, ACCENT_E, order == 2 ? "temps croissant" : "taille croissante");
+				}
+				printf("Voici la liste des scores :\n");
+				printf("Nom\tScore\tTaille\tTemps\n");
+
+				switch (order) {
 				case 1:
-					order = get_integer_input("Trier la liste de joueur par :\nSCORE\t\t1\nSCORE+TEMPS\t2\nSCORE+TAILLE\t3\nPSEUDO\t\t4\n", 1, 4);
-					clear();
-					print_logo();
-					if (order >= 2 && order <= 3) {
-						printf("Tri par score, et si %cgalit%c, par %s.\n", ACCENT_E, ACCENT_E, order == 2 ? "temps croissant" : "taille croissante");
-					}
-					printf("Voici la liste des scores :\n");
-					printf("Nom\tScore\tTaille\tTemps\n");
-
-					switch (order) {
-					case 1:
-						playerlist = orderPlayerlist(playerlist, k, playercmpscore);
-						break;
-					case 2:
-						playerlist = orderPlayerlist(playerlist, k, playercmpscoreANDtime);
-						break;
-					case 3:
-						playerlist = orderPlayerlist(playerlist, k, playercmpscoreANDsize);
-						break;
-					case 4:
-						playerlist = orderPlayerlist(playerlist, k, playercmppseudo);
-						break;
-					default:
-						break;
-					}
-					
-					printPlayerlist(stdout, playerlist, k);
-
-					wait(2);
-
-					input = get_string_input("Appuyez sur une touche pour continuer");
-					if (input.str != NULL) {
-						freeWord(&input);
-					}
-					continue;
+					playerlist = orderPlayerlist(playerlist, k, playercmpscore);
+					break;
 				case 2:
-					pseudotofind = get_string_input("Donnez le pseudo d'un joueur pour le trouver.");
+					playerlist = orderPlayerlist(playerlist, k, playercmpscoreANDtime);
+					break;
+				case 3:
+					playerlist = orderPlayerlist(playerlist, k, playercmpscoreANDsize);
+					break;
+				case 4:
 					playerlist = orderPlayerlist(playerlist, k, playercmppseudo);
-					
-					// bineary search through the playerlist who is sort by pseudo.
-					Boolean found = FALSE;
-					int bas = 0;
-					int haut = k - 1;
-					int milieu;
-					while (bas <= haut && !found) {
-						milieu = (bas + haut) / 2;
-						int cmp = strcmp(playerlist[milieu].pseudo,pseudotofind.str);
-						if (cmp == 0) {
-							found = TRUE;
-						} else if (cmp < 0) {
-							bas = milieu + 1;
-						} else {
-							haut = milieu - 1;
-						}
-					}
-					if (found) {
-						printf("\nNom\tScore\tTaille\tTemps\n");
-			        	printPlayer(stdout, playerlist[milieu]);
-					} else {
-						printf("Le joueur %s, n'est pas dans la liste.\n", pseudotofind.str);
-					}
-					
-					wait(2);
-
-					input = get_string_input("Appuyez sur une touche pour continuer");
-					if (input.str != NULL) {
-						freeWord(&input);
-					}
-					continue;
+					break;
 				default:
-					continue;
+					break;
 				}
-			case 3 : // Afficher les règles
-				printf("\n R%cgles du jeu :\n", ACCENT_E1);
-				printf("\tLe but du jeu est de trouver des mots en utilisant des lettres accolées dans la grille.\n");
-				printf("\tPour ce faire, vous pouvez utiliser les lettres dans tous les sens possibles.\n");
-				printf("\tTant qu'il est possible de tracer un chemin passant par toutes les lettres.\n");
 				
-				srand(15435);
-				char** grid = create_grid(4);
-				grid = fill_grid_algo(4, grid);
-				print_grid(4, grid);
-				printf("On retrouve le mot \"maire\", en comman%cant en haut %c gauche vers la droite.\n",CEDILLE, ACCENT_A);
-				printf("Puis, au i on d%cscend d'une ligne et on continue vers la gauche jusqu'au e.\n\n", ACCENT_E);
+				printPlayerlist(stdout, playerlist, k);
 
-				wait(3);
-				input = get_string_input("Appuyez sur une touche pour continuer");
-				if (input.str != NULL) {
-					freeWord(&input);
-				}
-				break;
+
+				wait(2);
 				
-			case 4 : // si l'utilisateur souhaite quitter le jeu
-				clear();
-				exit(EXIT_SUCCESS);
-				break;
-			case 5 :
-				printf("DEBUG\n");
-				printf("Aucun code à debug.\n");
-				wait(5);
+				validate("Appuyez sur une touche pour continuer");
+				continue;
+			case 2:
+				pseudotofind = get_string_input("Donnez le pseudo d'un joueur pour le trouver.");
+				playerlist = orderPlayerlist(playerlist, k, playercmppseudo);
+				
+				// bineary search through the playerlist who is sort by pseudo.
+				Boolean found = FALSE;
+				int bas = 0;
+				int haut = k - 1;
+				int milieu;
+				while (bas <= haut && !found) {
+					milieu = (bas + haut) / 2;
+					int cmp = strcmp(playerlist[milieu].pseudo,pseudotofind.str);
+					if (cmp == 0) {
+						found = TRUE;
+					} else if (cmp < 0) {
+						bas = milieu + 1;
+					} else {
+						haut = milieu - 1;
+					}
+				}
+				if (found) {
+					printf("\nNom\tScore\tTaille\tTemps\n");
+					printPlayer(stdout, playerlist[milieu]);
+				} else {
+					printf("Le joueur %s, n'est pas dans la liste.\n", pseudotofind.str);
+				}
+				
+				wait(2);
+				
+				validate("Appuyez sur une touche pour continuer");
+				continue;
 			default:
-				break;
+				continue;
+			}
+		case 3 : // Afficher les règles
+			printf("\n R%cgles du jeu :\n", ACCENT_E1);
+			printf("\tLe but du jeu est de trouver des mots en utilisant des lettres accolées dans la grille.\n");
+			printf("\tPour ce faire, vous pouvez utiliser les lettres dans tous les sens possibles.\n");
+			printf("\tTant qu'il est possible de tracer un chemin passant par toutes les lettres.\n");
+			
+			srand(15435);
+			char** grid = create_grid(4);
+			grid = fill_grid_algo(4, grid);
+			srand(seed);
+			print_grid(4, grid);
+			printf("On retrouve le mot \"maire\", en comman%cant en haut %c gauche vers la droite.\n",CEDILLE, ACCENT_A);
+			printf("Puis, au i on d%cscend d'une ligne et on continue vers la gauche jusqu'au e.\n\n", ACCENT_E);
+
+			wait(3);
+			validate("Appuyez sur une touche pour continuer");
+			break;
+			
+		case 4 : // si l'utilisateur souhaite quitter le jeu
+			clear();
+			exit(EXIT_SUCCESS);
+			break;
+		case 5 :
+			printf("DEBUG\n");
+			validate("Appuyez sur une touche pour continuer.");
+			// printf("Aucun code %c debug.\n", ACCENT_A);
+			// wait(5);
+			break;
+		default:
+			break;
 		}
 	} while (1);
 	return EXIT_SUCCESS;

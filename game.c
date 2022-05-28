@@ -304,6 +304,11 @@ Word get_string_input(const char* message) {
     return word;
 }
 
+void validate(const char* message) {
+    printf("%s\n", message);
+    getc(stdin);
+}
+
 void print_logo() {
     printf("\n    ____  ____  ______________    ______  \n");
     printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
@@ -354,7 +359,7 @@ Player play() {
         }
 
         if (i <= n) {
-            printf("Le pseudo %s a d%cja %ct%c utilis%c.\n", pseudo.str, ACCENT_E, ACCENT_E, ACCENT_E, ACCENT_E);
+            printf("Le pseudo %s %c d%cja %ct%c utilis%c.\n", pseudo.str, ACCENT_E, ACCENT_A, ACCENT_E, ACCENT_E, ACCENT_E);
             printf("Vous ne pouvez pas le r%cutiliser.\n", ACCENT_E);
             yes = 0;
         } else {
@@ -466,10 +471,8 @@ Player play() {
     player.score = score(wordsize, wordslen);
     printf("C'est fini, votre score est de %.2f\n", player.score);
 
-    Word input = get_string_input("Appuyez sur une touche pour continuer");
-    if (input.str != NULL) {
-        freeWord(&input);
-    }
+    validate("Appuyez sur une touche pour continuer");
+
     save_game(player, "scores.txt");
 
     free_grid(size, grid);
