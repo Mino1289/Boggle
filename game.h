@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef __GAME_H__
+#define __GAME_H__
 
 #include <grid.h>
 
@@ -7,15 +7,17 @@
 #define NB_LETTER 26
 
 #ifdef _WIN32
-    #define ACCENT_E 130
-    #define ACCENT_E1 131
-    #define ACCENT_A 133
-    #define CEDILLE 135
+    #define ACCENT_E 130    // é
+    #define ACCENT_E2 136   // ê
+    #define ACCENT_E1 138   // è
+    #define ACCENT_A 133    // à
+    #define CEDILLE 135     // ç
 #else //linux : pas d'accent
-    #define ACCENT_E 101 
-    #define ACCENT_E1 101
-    #define ACCENT_A 97
-    #define CEDILLE 99
+    #define ACCENT_E 101    // e
+    #define ACCENT_E1 101   // e
+    #define ACCENT_E2 101   // e
+    #define ACCENT_A 97     // a
+    #define CEDILLE 99      // c
 #endif
 
 /**
@@ -179,22 +181,22 @@ int playercmpscore(Player p1, Player p2);
  * We suppose same score and smaller grid id better.
  * @param p1 Player - the player to compare.
  * @param p2 Player - the player to compare. 
- * @return int 1 if (score1 > score2) OR (same score AND sizegrid1 < sizegrid2)
- *            -1 if (score2 > score1) OF (same score AND sizegrid1 > sizegrid2)
- *             0 if (same score AND same sizegrid)  
+ * @return int  1 if (size1 > size2) OR (size1 == size2 AND score1 > score2), 
+ *             -1 if (size1 < size2) OR (size1 == size2 AND score1 < score2), 
+ *              0 if their score and size are the same.
  */
-int playercmpscoreANDsize(Player p1, Player p2);
+int playercmpsizeANDscore(Player p1, Player p2);
 
 /**
  * @brief Compare two Player by their score and the time they played on if their score are equal.
  * We suppose same score and less time is better.
  * @param p1 Player - the player to compare.
  * @param p2 Player - the player to compare. 
- * @return int 1 if (score1 > score2) OR (same score AND time1 < time2)
- *            -1 if (score2 > score1) OF (same score AND time1 > time2)
- *             0 if (same score AND same time)  
+ * @return int 1 if (time1 > time2) OR (time1 == time2 AND score1 > score2),
+ *            -1 if (time1 < time2) OR (time1 == time2 AND score1 < score2),
+ *            0 if their score and time are the same.
  */
-int playercmpscoreANDtime(Player p1, Player p2);
+int playercmptimeANDscore(Player p1, Player p2);
 
 /**
  * @brief Compare two Player by their pseudo (using strcmp)
@@ -204,6 +206,17 @@ int playercmpscoreANDtime(Player p1, Player p2);
  * @return int -strcmp(p1.pseudo, p2.pseudo)
  */
 int playercmppseudo(Player p1, Player p2);
+
+/**
+ * @brief Checks if a player is in the list of players. Using a binary search.
+ * 
+ * @param playerlist Player* - The list of players.
+ * @param size int - The number of players.
+ * @param player Player - The player to search.
+ * @param index int* - The index of the player in the list of players (by address).
+ * @return Boolean 
+ */
+Boolean isPseudoInList(Player* playerlist, int size, Word pseudo, int *index);
 
 /**
  * @brief Print a player in a stream

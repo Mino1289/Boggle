@@ -235,32 +235,52 @@ int playercmpscore(Player p1, Player p2) {
     return 0; // equal
 }
 
-int playercmpscoreANDsize(Player p1, Player p2) {
-    int cmpscore = playercmpscore(p1, p2);
-    if (cmpscore == 0) {
-        if (p1.sizegrid < p2.sizegrid) {
-            return 1;
-        } else if (p1.sizegrid > p2.sizegrid) {
-            return -1;
-        }
+int playercmpsizeANDscore(Player p1, Player p2) {
+    if (p1.sizegrid > p2.sizegrid) {
+        return 1;
+    } else if (p1.sizegrid < p2.sizegrid) {
+        return -1;
+    } else {
+        return playercmpscore(p1, p2);
     }
-    return cmpscore;
 }
 
-int playercmpscoreANDtime(Player p1, Player p2) {
-    int cmpscore = playercmpscore(p1, p2);
-    if (cmpscore == 0) {
-        if (p1.timeplayed < p2.timeplayed) {
-            return 1;
-        } else if (p1.timeplayed > p2.timeplayed) {
-            return -1;
-        }
+int playercmptimeANDscore(Player p1, Player p2) {
+    if (p1.timeplayed < p2.timeplayed) {
+        return -1;
+    } else if (p1.timeplayed > p2.timeplayed) {
+        return 1;
+    } else {
+        return playercmpscore(p1, p2);
     }
-    return cmpscore;
 }
 
 int playercmppseudo(Player p1, Player p2) {
     return -strcmp(p1.pseudo, p2.pseudo);
+}
+
+Boolean isPseudoInList(Player* playerlist, int size, Word pseudo, int *index) {
+    Boolean found = FALSE;
+    int bas = 0;
+    int haut = size - 1;
+    int milieu;
+    while (bas <= haut && !found) {
+        milieu = (bas + haut) / 2;
+        int cmp = strcmp(playerlist[milieu].pseudo, pseudo.str);
+        if (cmp == 0) {
+            found = TRUE;
+        } else if (cmp < 0) {
+            bas = milieu + 1;
+        } else {
+            haut = milieu - 1;
+        }
+    }
+    if (found) {
+        *index = milieu;
+    } else {
+        *index = -1;
+    }
+    return found;
 }
 
 void printPlayer(FILE* stream, Player player) {
@@ -306,15 +326,21 @@ Word get_string_input(const char* message) {
 
 void validate(const char* message) {
     printf("%s\n", message);
-    getc(stdin);
+    #ifdef _WIN32
+        getchar();
+    #else
+        char temp;
+        scanf("%c\n", &temp);
+        fflush(stdin);
+    #endif
 }
 
 void print_logo() {
     printf("\n    ____  ____  ______________    ______  \n");
-    printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
-    printf("  / __  / / / / / __/ / __/ /   / __/     \n");
-    printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
-    printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
+     printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
+     printf("  / __  / / / / / __/ / __/ /   / __/     \n");
+     printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
+     printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
 }
 
 void clear() {

@@ -1,5 +1,5 @@
-#ifndef GRID_H
-#define GRID_H
+#ifndef __GRID_H__
+#define __GRID_H__
 
 #include <stdio.h>
 #include <stdlib.h>
