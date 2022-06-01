@@ -113,6 +113,7 @@ int main(int argc, char* argv[]) {
 				printf("On peut aussi trouver le mot \"pour\" en partant du coin en bas à gauche,\n");
 				printf("puis on trouve le 'o' a sa droite, le 'u' en haut a droite et le 'r' a gauche toute.\n");
 			#endif
+			printf("De plus, on ne peux pas utiliser 2 fois la m%cme lettre de la grille.\n", ACCENT_E2);
 			wait(2);
 			validate("\nAppuyez sur une touche pour continuer");
 			break;

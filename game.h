@@ -6,20 +6,6 @@
 #define MAX_CHAR_ARRAY_LENGTH 25
 #define NB_LETTER 26
 
-#ifdef _WIN32
-    #define ACCENT_E 130    // é
-    #define ACCENT_E2 136   // ê
-    #define ACCENT_E1 138   // è
-    #define ACCENT_A 133    // à
-    #define CEDILLE 135     // ç
-#else //linux : pas d'accent
-    #define ACCENT_E 101    // e
-    #define ACCENT_E1 101   // e
-    #define ACCENT_E2 101   // e
-    #define ACCENT_A 97     // a
-    #define CEDILLE 99      // c
-#endif
-
 /**
  * @brief Represent a Player 
  * 
@@ -79,9 +65,9 @@ typedef struct Coord {
  * @param grid char** - grid to search.
  * @param c char - character to search for.
  * @param sizecoords int* - number of occurrences of c in the grid (passing by address).
- * @return int** - Array of coordinates of the occurrences of c in the grid. {{row, col}, {row, col}, ...}.
+ * @return int** - Array of coordinates of the occurrences of c in the grid. {{c, row, col}, {c, row, col}, ...}.
  */
-Coord* locate_char(int size, char** grid, char c, int* sizecoords);
+Coord* locate_char(int size, char** grid, char c, int *sizecoords);
 
 /**
  * @brief 
@@ -94,7 +80,7 @@ Coord* locate_char(int size, char** grid, char c, int* sizecoords);
  * @param next char - the next character.
  * @return Boolean Whether the next character is around the current one.
  */
-Boolean is_around(int size, char** grid, int* row, int* col, char c, char next);
+Boolean is_around(int size, char** grid, int *row, int *col, char c, char next);
 
 /**
  * @brief Checks if a word is in the grid.
@@ -131,7 +117,6 @@ Boolean valid_word(const char* word, GrpWords* grpwords);
  * @return float the score of the player.
  */
 float score(int size, int* sizewords);
-
 
 /**
  * @brief Swap two players in the list of players.

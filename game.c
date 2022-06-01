@@ -1,6 +1,6 @@
 #include <game.h>
 
-Coord* locate_char(int size, char** grid, char c, int* sizecoords) {
+Coord* locate_char(int size, char** grid, char c, int *sizecoords) {
     Coord* coords = malloc(sizeof(Coord*));
     if (coords == NULL) {
         fprintf(stderr, "ERROR: Could not allocate memory for coords.\n");
@@ -69,20 +69,40 @@ Boolean search2D(int size, char** grid, Word word) {
     int sizeword = word.length;
     int sizecoords;
     Coord* coords = locate_char(size, grid, word.str[0], &sizecoords);
+    Coord* verif = (Coord*) malloc(sizeof(Coord*)*sizeword);
     int k = 0;
-    Boolean found = FALSE;
+    Boolean found = FALSE, duplicate;
     while (k < sizecoords && !found) {
-        int row = coords[k].row;
-        int col = coords[k].col;
-        int i = 1;
+        duplicate = FALSE;
+        int row = coords[k].row, col = coords[k].col, i = 1;
+
+        verif[0] = (Coord) {word.str[i], row, col};
         while (i < sizeword-1 && is_around(size, grid, &row, &col, word.str[i-1], word.str[i])) {
+            verif[i] = (Coord) {word.str[i-1], row, col};
             i++;
         }
+
+        // on vérifie qu'on utilise pas 2* la même lettre dans le même mot
+        // checks for doublon in the liste verif
+
         if (i == sizeword-1) {
-            found = TRUE;
+            int j = 0, l;
+            while (j < sizeword && !duplicate) {
+                l = j+1;
+                while (l < sizeword && (verif[j].row != verif[l].row || verif[j].col != verif[l].col)) {
+                    l++;
+                }
+                if (l < sizeword) {
+                    duplicate = TRUE;
+                }
+                j++;
+            }
+            found = !duplicate;
         }
         k++;
     }
+    free(coords);
+    free(verif);
     
     return found;
 }
