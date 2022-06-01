@@ -5,6 +5,19 @@
 #include <grid.h>
 #include <save.h>
 
+#ifdef _WIN32
+    #define ACCENT_E 130    // é
+    #define ACCENT_E2 136   // ê
+    #define ACCENT_E1 138   // è
+    #define ACCENT_A 133    // à
+    #define CEDILLE 135     // ç
+#else //linux : pas d'accent
+    #define ACCENT_E 101    // e
+    #define ACCENT_E1 101   // e
+    #define ACCENT_E2 101   // e
+    #define ACCENT_A 97     // a
+    #define CEDILLE 99      // c
+#endif
 
 /**
  * @brief Print the grid
