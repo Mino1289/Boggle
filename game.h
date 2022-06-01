@@ -132,22 +132,6 @@ Boolean valid_word(const char* word, GrpWords* grpwords);
  */
 float score(int size, int* sizewords);
 
-/**
- * @brief Save the score of the player.
- * 
- * @param player Player - the player to save.
- * @param file_path char* - the path of the file to save the score.
- */
-void save_game(Player player, const char* file_path);
-
-/**
- * @brief Read the list of players from a file.
- * 
- * @param file_path char* the path of the file to read.
- * @param size int - the number of players (by address).
- * @param Player** - list of players (by address).
- */
-void read_games(const char* file_path, int* size, Player** players);
 
 /**
  * @brief Swap two players in the list of players.
@@ -218,67 +202,6 @@ int playercmppseudo(Player p1, Player p2);
  */
 Boolean isPseudoInList(Player* playerlist, int size, Word pseudo, int *index);
 
-/**
- * @brief Print a player in a stream
- * 
- * @param stream FILE* - The stream to print to
- * @param player Player - The player to print.
- */
-void printPlayer(FILE* stream, Player player);
-
-/**
- * @brief Print the playerlist in a stream.
- * 
- * @param stream FILE* - The stream to print to.
- * @param playerlist Player* - The list of the players.
- * @param size int - The size of the playerlist.
- */
-void printPlayerlist(FILE* stream, Player* playerlist, int size);
-
-/**
- * @brief Get an integer from the user
- * 
- * @param message char* - the message to print to the user.
- * @param min int - the minimum value of the integer.
- * @param max int - the maximum value of the integer.
- * @return int - the integer entered by the user.
- */
-int get_integer_input(const char* message, int min, int max);
-
-/**
- * @brief Get a string from the user
- * 
- * @param message char* - the message to print to the user.
- * 
- * @return Word - the word entered by the user.
- */
-Word get_string_input(const char* message);
-
-/**
- * @brief Get an input, just a validation to the next step
- * 
- * @param message char* - the message to print to the user 
- */
-void validate(const char* message);
-
-/**
- * @brief Prints the logo 'BOGGLE' to stdin.
- * 
- */
-void print_logo();
-
-/**
- * @brief Clear stdin.
- * 
- */
-void clear();
-
-/**
- * @brief Wait some time.
- * 
- * @param seconds int - the number of seconds to wait
- */
-void wait(int seconds);
 
 /**
  * @brief Free a Word.
@@ -294,11 +217,5 @@ void freeWord(Word *word);
  */
 void freeGrpWords(GrpWords *grpWords);
 
-/**
- * @brief Start a game.
- * 
- * @return Player - The player object of the player who played. 
- */
-Player play();
 
 #endif

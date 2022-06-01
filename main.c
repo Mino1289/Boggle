@@ -1,5 +1,7 @@
 #include <grid.h>
 #include <game.h>
+#include <gui.h>
+#include <save.h>
 
 
 int main(int argc, char* argv[]) {
@@ -8,6 +10,8 @@ int main(int argc, char* argv[]) {
 		seed = atoi(argv[1]);
 	}
 	srand(seed);
+	
+	Boolean exitmenu = FALSE;
 
 	do {
 		clear();
@@ -62,11 +66,8 @@ int main(int argc, char* argv[]) {
 					break;
 				default:
 					break;
-				}
-				
+				}				
 				printPlayerlist(stdout, playerlist, k);
-
-
 				wait(2);
 				
 				validate("Appuyez sur une touche pour continuer");
@@ -118,7 +119,7 @@ int main(int argc, char* argv[]) {
 			
 		case 4 : // si l'utilisateur souhaite quitter le jeu
 			clear();
-			exit(EXIT_SUCCESS);
+			exitmenu = TRUE;
 			break;
 		case 5 :
 			printf("DEBUG\n");
@@ -127,6 +128,6 @@ int main(int argc, char* argv[]) {
 		default:
 			break;
 		}
-	} while (1);
+	} while (exitmenu != 1);
 	return EXIT_SUCCESS;
 }

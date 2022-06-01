@@ -15,7 +15,7 @@ else
 	CLEANCMD = rm -rf *.o *.so *.exe *.dll main.txt
 endif
 
-LIBSOURCE = grid game
+LIBSOURCE = gui grid game save
 LIBSOURCECFILE = $(LIBSOURCE:=.c)
 LIBSOURCEOFILE = $(LIBSOURCE:=.o)
 

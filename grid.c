@@ -1,5 +1,4 @@
 #include <grid.h>
-#include <game.h>
 
 char** create_grid(int size) {
     char** grid = malloc(sizeof(char*) * size);
@@ -20,43 +19,6 @@ char** create_grid(int size) {
     }
     return grid;
 }
-
-
-#ifdef _WIN32
-void print_grid(int size, char** grid) {
-    for (int i = 0; i < size; i++) {
-        for (int k = 0; k < size; k++) {
-            printf("%c%c%c%c", k==0 ? i==0 ? 201 : 204 : i==0 ? 203 : 206, 205, 205, 205);
-        }
-        printf("%c\n%c", i==0 ? 187 : 185, 186);
-        for (int j = 0; j < size; j++) {
-            printf( " %c %c", grid[i][j], 186);
-        }
-        printf("\n");
-    }
-    for (int i = 0; i < size; i++) {
-        printf("%c%c%c%c", i==0 ? 200 : 202, 205, 205, 205);
-    }
-    printf("%c\n", 188);
-}
-#else
-void print_grid(int size, char** grid) {
-    for (int i = 0; i < size; i++) {
-        for (int k = 0; k < size; k++) {
-            printf("+---");
-        }
-        printf("+\n|");
-        for (int j = 0; j < size; j++) {
-            printf(" %c |", grid[i][j]);
-        }
-        printf("\n");
-    }
-    for (int i = 0; i < size; i++) {
-        printf("+---");
-    }
-    printf("+\n\n");
-}
-#endif
 
 void free_grid(int size, char** grid) {
     if (grid == NULL) {
@@ -85,11 +47,6 @@ Boolean contains_char(int size, char** grid, char c) {
     }
 }
 
-/**
- * @brief MARCHE PO
- * 
- * @return char 
- */
 char gen_rand_char() {
     int lettersdist[] = {8.182, 9.094, 12.443, 16.116, 32.842, 33.909, 34.776, 35.514, 43.101, 43.715, 43.789,
     49.251, 52.222, 59.325, 65.127, 67.651, 69.014, 75.714, 83.671, 90.923, 97.241, 99.081, 99.130, 99.557, 99.685, 100};

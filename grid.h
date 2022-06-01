@@ -20,15 +20,6 @@ typedef enum {
  */
 char** create_grid(int size);
 
-
-/**
- * @brief Print the grid
- * 
- * @param size int - size of the grid
- * @param grid char** - pointer to the grid
- */
-void print_grid(int size, char** grid);
-
 /**
  * @brief Free the grid
  * 
