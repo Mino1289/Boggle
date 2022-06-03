@@ -10,6 +10,10 @@ int main(int argc, char* argv[]) {
 		seed = atoi(argv[1]);
 	}
 	srand(seed);
+	#if DEBUG
+		printf("seed: %lld\n", seed);
+		validate("next");
+	#endif
 	
 	Boolean exitmenu = FALSE;
 
@@ -17,7 +21,7 @@ int main(int argc, char* argv[]) {
 		clear();
 		printf("Bienvenue dans :");
         print_logo();
-		int reponse = get_integer_input("Que souhaitez-vous faire ?\nJOUER\t\t\t1\nAFFICHER SCORES\t\t2\nAFFICHER REGLES\t\t3\nQUITTER LE JEU\t\t4\n", 1, 5);
+		int reponse = get_integer_input("Que souhaitez-vous faire ?\nJOUER\t\t\t1\nAFFICHER SCORES\t\t2\nAFFICHER REGLES\t\t3\nQUITTER LE JEU\t\t4\n", 1, 4);
 		clear();
 		print_logo();
 
@@ -26,13 +30,18 @@ int main(int argc, char* argv[]) {
 
 		Word pseudotofind;
 		switch (reponse) {
-		case 1 :	// si l'utilisateur souhaite démarer une partie
+		case 1 :	// if the user want to start a game
 			play();
 			break;
-		case 2 : // si l'utilisateur souhaite afficher les scores // trie etc
+		case 2 : // if the user want to see the scores
 			read_games("scores.txt", &k, &playerlist);
+			#if DEBUG
+				printf("On lit %d parties joués.\n", k);
+				validate("next");
+				clear();
+				print_logo();
+			#endif
 			if (k <= 0) {
-				printf("k = %d\n", k);
 				printf("Il n'y a pas de score sauvegard%c pour l'instant.\n", ACCENT_E);
 				wait(3);
 				continue;
@@ -77,10 +86,10 @@ int main(int argc, char* argv[]) {
 				playerlist = orderPlayerlist(playerlist, k, playercmppseudo);
 
 				
-				// bineary search through the playerlist who is sort by pseudo.
-				Boolean found = isPseudoInList(playerlist, k, pseudotofind, &index);
+				// binary search through the playerlist who is sort by pseudo.
+				index = isPseudoInList(playerlist, k, pseudotofind);
 				
-				if (found && index != -1) {
+				if (index != -1) {
 					printf("\nNom\tScore\tTaille\tTemps\n");
 					printPlayer(stdout, playerlist[index]);
 				} else {
@@ -94,7 +103,7 @@ int main(int argc, char* argv[]) {
 			default:
 				continue;
 			}
-		case 3 : // Afficher les règles
+		case 3 : // Print the rules
 			printf("\n R%cgles du jeu :\n", ACCENT_E1);
 			printf("\tLe but du jeu est de trouver des mots en utilisant des lettres accol%ces dans la grille.\n", ACCENT_E);
 			printf("\tPour ce faire, vous pouvez utiliser les lettres dans tous les sens possibles.\n");
@@ -104,7 +113,7 @@ int main(int argc, char* argv[]) {
 			grid = fill_grid_algo(4, grid);
 			srand(seed);
 			print_grid(4, grid);
-			#ifdef _WIN32
+			#ifdef _WIN32 // pas le même texte car la génération sur linux est différente que sur windows.
 				printf("On retrouve le mot \"maire\", en comman%cant en haut %c gauche vers la droite.\n", CEDILLE, ACCENT_A);
 				printf("Puis, au i on d%cscend d'une ligne et on continue vers la gauche jusqu'au 'e'.\n\n", ACCENT_E);
 			#else
@@ -113,22 +122,18 @@ int main(int argc, char* argv[]) {
 				printf("On peut aussi trouver le mot \"pour\" en partant du coin en bas à gauche,\n");
 				printf("puis on trouve le 'o' a sa droite, le 'u' en haut a droite et le 'r' a gauche toute.\n");
 			#endif
-			printf("De plus, on ne peux pas utiliser 2 fois la m%cme lettre de la grille.\n", ACCENT_E2);
+			printf("De plus, on ne peux pas utiliser 2 fois la m%cme lettre de la grille dans un mot.\n", ACCENT_E2);
 			wait(2);
 			validate("\nAppuyez sur une touche pour continuer");
 			break;
 			
-		case 4 : // si l'utilisateur souhaite quitter le jeu
+		case 4 : // if the user want to quit
 			clear();
 			exitmenu = TRUE;
-			break;
-		case 5 :
-			printf("DEBUG\n");
-			validate("Appuyez sur une touche pour continuer.");
 			break;
 		default:
 			break;
 		}
-	} while (exitmenu != 1);
+	} while (!exitmenu);
 	return EXIT_SUCCESS;
 }

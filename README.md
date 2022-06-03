@@ -1,8 +1,16 @@
 # Boggle
 
 ## Compiling
+For the compilation, you'll need tools such as :
+`make`, `gcc`, ``
+### From scratch
 ```
-./boggle> make clean
-./boggle> make all
-./boggle> make run
+$ make clean run
 ```
+
+### Debug
+```
+$ make clean
+$ make DEBUG=1
+```
+Then you can use gdb to debug the program.

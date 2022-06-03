@@ -15,7 +15,7 @@ void read_games(const char* file_path, int* size, Player** players) {
         fprintf(stderr, "ERROR: Could not open file %s\n", file_path);
         return;
     }
-    Player* playerlist = (Player*) malloc(sizeof(Player)); // on va réalloc
+    Player* playerlist = (Player*) malloc(sizeof(Player)); // we will realloc
     if (playerlist == NULL) {
         fprintf(stderr, "ERROR: Could not allocate memory for playerlist\n");
         return;
