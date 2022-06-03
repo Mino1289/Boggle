@@ -68,11 +68,11 @@ Word get_string_input(const char* message) {
     char temp[MAX_CHAR_ARRAY_LENGTH];
     scanf("%s", temp);
     fflush(stdin);
-    int k = strlen(temp)+1;
+    int k = strlen(temp);
     char* str = (char*) malloc(sizeof(char)*k);
     Word word = (Word) {k, str};
 
-    strncpy(word.str, temp, k);
+    strncpy(word.str, temp, k+1);
         
     return word;
 }
@@ -82,7 +82,7 @@ void validate(const char* message) {
     #ifdef _WIN32
         getchar();
     #else
-        FILE* f = fopen("/dev/tty", "r"); // fait par M. Gaud
+        FILE* f = fopen("/dev/tty", "r"); // done by M. Gaud
         if (f != NULL) {
             int c = fgetc(f);
             (void) c;
@@ -135,11 +135,10 @@ Player play() {
             yes = 1;
         }
         free(gamelist);
-        free(pseudo.str);
-    } while (yes == 0);
+        freeWord(&pseudo);
+    } while (yes == 0); // we ask for an unused nickname, if not, we ask again
     printf("Vous allez jouer en tant que : %s\n", player.pseudo);
     
-    //  // ^ faut demander au joueur un pseudo, si il est pas pris, il le prend, sinon il en choisi un autre.
 
     int size = get_integer_input("Choisissez la taille de votre grille (4-8): ", 4, 8);
     player.sizegrid = size;
@@ -150,20 +149,15 @@ Player play() {
     double playtime = (double) get_integer_input("Choisissez le temps de jeu (60s-180s): ", 60, 180);
     player.timeplayed = playtime;
     
-    int* wordslen = (int*) malloc(sizeof(int)); // tableau de taille de mots -> sera realloc
-    if (wordslen == NULL) {
-        fprintf(stderr, "ERROR: Could not allocate memory for wordslen\n");
-        return player;
-    }
-    char** words = (char**) malloc(sizeof(char*)); // tableau de mots -> sera realloc
+    Word* words = (Word*) malloc(sizeof(Word)); // array of Word -> will be realloc'ed
     if (words == NULL) {
         fprintf(stderr, "ERROR: Could not allocate memory for words\n");
         return player;
     }
 
-    int wordsize = 0; // taille du tableau de taille de mot et du tableau de mots
-    int iter = 1; // nombre d'itération
-    double dtime = 0; // temps écoulé
+    int wordsize = 0; // size of the array of words
+    int iter = 1; // number of iterations
+    double dtime = 0; // time passed since the beginning of the game
 
     clear();
     print_logo();
@@ -175,36 +169,29 @@ Player play() {
 
         if (search2D(size, grid, word)) {
         
-            // mots dans la grille
+            // the word is in the grid
             if (valid_word(word.str, grpwords)) {
-                // mots dans le dico
+                // the word is also in the dictionary
                 Boolean found = FALSE;
                 int i = 0;
                 while (i < wordsize && !found) {
-                    if (strcmp(words[i], word.str) == 0) {
+                    if (strcmp(words[i].str, word.str) == 0) {
                         found = TRUE;
                     }
                     i++;
                 }
                 if (!found) {
-                    // mots pas encore trouvé
+                    // this word has not been found yet
                     printf("Le mot %s est dans la grille\n", word.str);
-                    wordslen[wordsize] = word.length-1;
-                    words[wordsize] = malloc(sizeof(char)*word.length);
-                    if (words[wordsize] == NULL) {
-                        fprintf(stderr, "ERROR: Could not allocate memory for words[%d]\n", wordsize);
-                        return player;
-                    }
-                    strcpy(words[wordsize], word.str);
+                    words[wordsize].length = word.length;
+                    words[wordsize].str = malloc(sizeof(char)*(word.length+1));
+                    strncpy(words[wordsize].str, word.str, word.length+1); // maybe use memcpy ?
 
                     wordsize++;
 
-                    wordslen = realloc(wordslen, sizeof(int)*(wordsize+1));
-                    wordslen[wordsize] = 0;
-
-                    words = realloc(words, sizeof(char*)*(wordsize+1));
+                    words = realloc(words, sizeof(Word)*(wordsize+1));
                 } else {
-                    // mots déja trouvé
+                    // word already found
                     printf("Vous avez d%cja trouv%c le mot %s\n", ACCENT_E, ACCENT_E, word.str);
                 }
             } else {
@@ -220,7 +207,7 @@ Player play() {
             print_logo();
             print_grid(size, grid);
             for (int i = 0; i < wordsize; i++) {
-                printf("%s ", words[i]);
+                printf("%s ", words[i].str);
             }
             printf("\n");
         }
@@ -232,10 +219,10 @@ Player play() {
     printf("%d mots trouv%cs:\n", wordsize, ACCENT_E);
     printf("Mot : Taille\n");   
     for (int i = 0; i < wordsize; i++) {
-        printf("%s : %d\n", words[i], wordslen[i]);
+        printf("%s : %d\n", words[i].str, words[i].length);
     }
     printf("\n");
-    player.score = score(wordsize, wordslen);
+    player.score = score(wordsize, words);
     printf("C'est fini, votre score est de %.2f\n", player.score);
 
     validate("Appuyez sur une touche pour continuer");
@@ -243,8 +230,12 @@ Player play() {
     save_game(player, "scores.txt");
 
     free_grid(size, grid);
-    free(wordslen);
-
+    
+    for (int i = 0; i < wordsize; i++) {
+        freeWord(&words[i]);
+    }
+    free(words);
+    
     for (int i = 0; i < NB_LETTER; i++) {
         freeGrpWords(&(grpwords[i]));
     }

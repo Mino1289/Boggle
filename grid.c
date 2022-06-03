@@ -10,7 +10,7 @@ char** create_grid(int size) {
         grid[i] = malloc(sizeof(char) * size);
         if (grid[i] == NULL) {
             fprintf(stderr, "ERROR: Could not allocate memory for grid rows, size (%d*%d)[%d]\n", size, size, i);
-            free_grid(size, grid); // par sécu
+            free_grid(size, grid); // for security
             return NULL;
         }
         for (int j = 0; j < size; j++) {
@@ -50,6 +50,7 @@ Boolean contains_char(int size, char** grid, char c) {
 char gen_rand_char() {
     int lettersdist[] = {8.182, 9.094, 12.443, 16.116, 32.842, 33.909, 34.776, 35.514, 43.101, 43.715, 43.789,
     49.251, 52.222, 59.325, 65.127, 67.651, 69.014, 75.714, 83.671, 90.923, 97.241, 99.081, 99.130, 99.557, 99.685, 100};
+    // we've sum all the % of the letters in the french alphabet
     float nombre = rand() / 100.0f;
     while (nombre >= 100) {
         nombre = (rand()) / 100.0f;
@@ -107,7 +108,7 @@ char** fill_grid_algo(int size, char** grid) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 matsup[i][j] = grid[gap_col+i][gap_row+j]; 
-                // ici on va gen les lettres
+                // here we gen the letters
                 if (matsup[i][j] == '0') {
                     char c;
                     do {

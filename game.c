@@ -82,8 +82,8 @@ Boolean search2D(int size, char** grid, Word word) {
             i++;
         }
 
-        // on vérifie qu'on utilise pas 2* la même lettre dans le même mot
-        // checks for doublon in the liste verif
+        // we check there is no two times the same coord
+        // we perform an algorithm similar to check if there is doublons in a list
 
         if (i == sizeword-1) {
             int j = 0, l;
@@ -134,12 +134,12 @@ GrpWords* read_dico() {
         char buffer [MAX_CHAR_ARRAY_LENGTH];
         int len;
         fscanf(file, "%s\t%d", buffer, &len);
-        if (i != buffer[0] - 'a') { // changement de lettre => on remet k à 0
+        if (i != buffer[0] - 'a') { // letter change => we put k = 0
             k = 0;  
             i = buffer[0] - 'a'; 
         }
 
-        grpwords[i].words[k].length = len; // longueur
+        grpwords[i].words[k].length = len; // length
         grpwords[i].words[k].str = malloc(sizeof(char)*(grpwords[i].words[k].length+1)); //with the '\0'
         if (grpwords[i].words[k].str == NULL) {
             fprintf(stderr, "ERROR: Could not allocate memory for grpwords[%d].words[%d].str.\n", i, k);
@@ -182,10 +182,10 @@ Boolean valid_word(const char* word, GrpWords* grpwords) {
 }
 
 
-float score(int size, int* sizewords) {
+float score(int size, Word* words) {
     float score = 0;
     for (int i = 0; i < size; i++) {
-        score += pow(sizewords[i], 4.0/3.0);
+        score += pow(words[i].length, 4.0/3.0); // maybe use a series of polynomials
     }
     return score;
 }
@@ -197,7 +197,7 @@ void swapPlayer(Player* playerlist, int index1, int index2) {
 }
 
 Player* orderPlayerlist(Player* playerlist, int size, int (*playercmp)(Player p1, Player p2)) {
-    //on bubble 
+    // we use a bubble sort
     Boolean weswap;
     int loop = 0;
     do {
@@ -246,7 +246,7 @@ int playercmppseudo(Player p1, Player p2) {
     return -strcmp(p1.pseudo, p2.pseudo);
 }
 
-Boolean isPseudoInList(Player* playerlist, int size, Word pseudo, int *index) {
+int isPseudoInList(Player* playerlist, int size, Word pseudo) {
     Boolean found = FALSE;
     int bas = 0;
     int haut = size - 1;
@@ -262,18 +262,15 @@ Boolean isPseudoInList(Player* playerlist, int size, Word pseudo, int *index) {
             haut = milieu - 1;
         }
     }
-    if (found) {
-        *index = milieu;
-    } else {
-        *index = -1;
-    }
-    return found;
+    if (found)
+        return milieu;
+    return -1;
 }
 
 
 void freeWord(Word *word) {
     free(word->str);
-    *word = (Word) {0, NULL}; // Légal ?
+    *word = (Word) {0, NULL}; // legal ?
 }
 
 void freeGrpWords(GrpWords *grpwords) {

@@ -1,7 +1,13 @@
 CXX = gcc
-CFLAGS = -Wall -Werror -Wextra -fpic -pedantic -g
+CFLAGS = -Wall -Werror -Wextra -pedantic
 LIBSDIR = -L. -L/usr/lib
 INCLUDEDIR = -I. -I/usr/include
+
+DEBUG ?= 0 # can be changed on the command line
+ifeq ($(DEBUG),1)
+	CFLAGS += -ggdb
+	CFLAGS += -DDEBUG
+endif
 
 LIBCORENAME = grid
 
@@ -10,8 +16,9 @@ ifeq ($(OS), Windows_NT)
 	LIBTARGET :=$(LIBCORENAME:=.dll)
 	CLEANCMD = @del /q *.o *.dll *.exe *.so main.txt
 else
+	CFLAGS += -fpic
 	EXPORT = sh export.sh
-	LIBTARGET :=lib$(LIBCORENAME:=.so)
+	LIBTARGET := lib$(LIBCORENAME:=.so)
 	CLEANCMD = rm -rf *.o *.so *.exe *.dll main.txt
 endif
 

@@ -113,10 +113,10 @@ Boolean valid_word(const char* word, GrpWords* grpwords);
  * @brief Calculate the score of the player.
  * 
  * @param size int - size of the grid.
- * @param sizewords int* - array of length of the words the player found.
+ * @param words Word* - array of the words the player found.
  * @return float the score of the player.
  */
-float score(int size, int* sizewords);
+float score(int size, Word* words);
 
 /**
  * @brief Swap two players in the list of players.
@@ -182,10 +182,9 @@ int playercmppseudo(Player p1, Player p2);
  * @param playerlist Player* - The list of players.
  * @param size int - The number of players.
  * @param player Player - The player to search.
- * @param index int* - The index of the player in the list of players (by address).
- * @return Boolean 
+ * @return int - The index of the player in the list of players (-1 if not in the list.) 
  */
-Boolean isPseudoInList(Player* playerlist, int size, Word pseudo, int *index);
+int isPseudoInList(Player* playerlist, int size, Word pseudo);
 
 
 /**
