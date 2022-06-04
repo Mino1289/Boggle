@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 			print_logo();
 			switch (scoretype) {
 			case 1:
-				order = get_integer_input("Trier la liste de joueur par :\nSCORE\t\t1\nTEMPS+SCORE\t2\nTAILLE+SCORE\t3\nPSEUDO\t\t4\n", 1, 4);
+				order = get_integer_input("Trier la liste de joueur par :\nSCORE\t\t\t1\nTEMPS+SCORE\t\t2\nTAILLE+SCORE\t\t3\nTAILLE+TEMPS+SCORE\t4\nPSEUDO\t\t\t5\n", 1, 5);
 				clear();
 				print_logo();
 				if (order >= 2 && order <= 3) {
@@ -71,6 +71,9 @@ int main(int argc, char* argv[]) {
 					playerlist = orderPlayerlist(playerlist, k, playercmpsizeANDscore);
 					break;
 				case 4:
+					playerlist = orderPlayerlist(playerlist, k, playercmpsizeANDtimeANDscore);
+					break;
+				case 5:
 					playerlist = orderPlayerlist(playerlist, k, playercmppseudo);
 					break;
 				default:

@@ -242,6 +242,22 @@ int playercmptimeANDscore(Player p1, Player p2) {
     }
 }
 
+int playercmpsizeANDtimeANDscore(Player p1, Player p2) {
+    if (p1.sizegrid > p2.sizegrid) {
+        return 1;
+    } else if (p1.sizegrid < p2.sizegrid) {
+        return -1;
+    } else {
+        if (p1.timeplayed < p2.timeplayed) {
+            return 1;
+        } else if (p1.timeplayed > p2.timeplayed) {
+            return -1;
+        } else {
+            return playercmpscore(p1, p2);
+        }
+    }
+}
+
 int playercmppseudo(Player p1, Player p2) {
     return -strcmp(p1.pseudo, p2.pseudo);
 }

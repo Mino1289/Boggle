@@ -2,15 +2,14 @@
 
 ## Compiling
 For the compilation, you'll need tools such as :
-`make`, `gcc`, ``
+`make` and `gcc`
 ### From scratch
 ```
-$ make clean run
+$ make clean run -j
 ```
 
 ### Debug
 ```
-$ make clean
-$ make DEBUG=1
+$ make clean run DEBUG=1 -j
 ```
 Then you can use gdb to debug the program.

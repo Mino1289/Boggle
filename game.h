@@ -168,6 +168,15 @@ int playercmpsizeANDscore(Player p1, Player p2);
 int playercmptimeANDscore(Player p1, Player p2);
 
 /**
+ * @brief 
+ * 
+ * @param p1 
+ * @param p2 
+ * @return int 
+ */
+int playercmpsizeANDtimeANDscore(Player p1, Player p2);
+
+/**
  * @brief Compare two Player by their pseudo (using strcmp)
  * 
  * @param p1 Player - the player to compare.
