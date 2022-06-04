@@ -170,7 +170,7 @@ Player play() {
         if (search2D(size, grid, word)) {
         
             // the word is in the grid
-            if (valid_word(word.str, grpwords)) {
+            if (valid_word(word, grpwords)) {
                 // the word is also in the dictionary
                 Boolean found = FALSE;
                 int i = 0;

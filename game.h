@@ -103,11 +103,11 @@ GrpWords* read_dico();
 /**
  * @brief Checks if a word is in the dico, using a binary search inside the GrpWords starting with the same letter.
  * 
- * @param word char* - word to search.
+ * @param word Word - The word to search.
  * @param grpwords GrpWords* - array of list of words grouped by their first letter.
  * @return Boolean 
  */
-Boolean valid_word(const char* word, GrpWords* grpwords);
+Boolean valid_word(const Word word, GrpWords* grpwords);
 
 /**
  * @brief Calculate the score of the player.
