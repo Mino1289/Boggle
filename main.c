@@ -10,10 +10,6 @@ int main(int argc, char* argv[]) {
 		seed = atoi(argv[1]);
 	}
 	srand(seed);
-	#if DEBUG
-		printf("seed: %lld\n", seed);
-		validate("next");
-	#endif
 	
 	Boolean exitmenu = FALSE;
 
@@ -35,12 +31,6 @@ int main(int argc, char* argv[]) {
 			break;
 		case 2 : // if the user want to see the scores
 			read_games("scores.txt", &k, &playerlist);
-			#if DEBUG
-				printf("On lit %d parties joués.\n", k);
-				validate("next");
-				clear();
-				print_logo();
-			#endif
 			if (k <= 0) {
 				printf("Il n'y a pas de score sauvegard%c pour l'instant.\n", ACCENT_E);
 				wait(3);

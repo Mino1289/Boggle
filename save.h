@@ -16,7 +16,7 @@ void save_game(Player player, const char* file_path);
  * 
  * @param file_path char* the path of the file to read.
  * @param size int - the number of players (by address).
- * @param Player** - list of players (by address).
+ * @param players Player** - list of players (by address and will be reallocate).
  */
 void read_games(const char* file_path, int* size, Player** players);
 

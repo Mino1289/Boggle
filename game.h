@@ -10,8 +10,8 @@
  * @brief Represent a Player 
  * 
  * @param pseudo char[MAX_CHAR_ARRAY_LENGTH] - The pseudo of the player
- * @param score int - The score of the player
- * @param timeplaued int - The time played by the player
+ * @param score float - The score of the player
+ * @param timeplayed int - The time played by the player
  * @param sizegrid int - The size of the grid of the player
  */
 typedef struct Player {
