@@ -92,10 +92,10 @@ void validate(const char* message) {
 
 void print_logo() {
     printf("\n    ____  ____  ______________    ______  \n");
-     printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
-     printf("  / __  / / / / / __/ / __/ /   / __/     \n");
-     printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
-     printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
+    printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
+    printf("  / __  / / / / / __/ / __/ /   / __/     \n");
+    printf(" / /_/ / /_/ / /_/ / /_/ / /___/ /___     \n");
+    printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
 }
 
 void clear() {
@@ -170,7 +170,7 @@ Player play() {
         if (search2D(size, grid, word)) {
         
             // the word is in the grid
-            if (valid_word(word.str, grpwords)) {
+            if (valid_word(word, grpwords)) {
                 // the word is also in the dictionary
                 Boolean found = FALSE;
                 int i = 0;

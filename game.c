@@ -159,8 +159,8 @@ GrpWords* read_dico() {
     return grpwords;
 }
 
-Boolean valid_word(const char* word, GrpWords* grpwords) {
-    char frstletter = word[0];
+Boolean valid_word(const Word word, GrpWords* grpwords) {
+    char frstletter = word.str[0];
     int indexletter = frstletter - 'a';
 
     Boolean found = FALSE;
@@ -169,7 +169,7 @@ Boolean valid_word(const char* word, GrpWords* grpwords) {
     int milieu;
     while (bas <= haut && !found) {
         milieu = (bas + haut) / 2;
-        int cmp = strcmp(grpwords[indexletter].words[milieu].str, word);
+        int cmp = strcmp(grpwords[indexletter].words[milieu].str, word.str);
         if (cmp == 0) {
             found = TRUE;
         } else if (cmp < 0) {
@@ -239,6 +239,22 @@ int playercmptimeANDscore(Player p1, Player p2) {
         return 1;
     } else {
         return playercmpscore(p1, p2);
+    }
+}
+
+int playercmpsizeANDtimeANDscore(Player p1, Player p2) {
+    if (p1.sizegrid > p2.sizegrid) {
+        return 1;
+    } else if (p1.sizegrid < p2.sizegrid) {
+        return -1;
+    } else {
+        if (p1.timeplayed < p2.timeplayed) {
+            return 1;
+        } else if (p1.timeplayed > p2.timeplayed) {
+            return -1;
+        } else {
+            return playercmpscore(p1, p2);
+        }
     }
 }
 

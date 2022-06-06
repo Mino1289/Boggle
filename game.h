@@ -10,8 +10,8 @@
  * @brief Represent a Player 
  * 
  * @param pseudo char[MAX_CHAR_ARRAY_LENGTH] - The pseudo of the player
- * @param score int - The score of the player
- * @param timeplaued int - The time played by the player
+ * @param score float - The score of the player
+ * @param timeplayed int - The time played by the player
  * @param sizegrid int - The size of the grid of the player
  */
 typedef struct Player {
@@ -103,11 +103,11 @@ GrpWords* read_dico();
 /**
  * @brief Checks if a word is in the dico, using a binary search inside the GrpWords starting with the same letter.
  * 
- * @param word char* - word to search.
+ * @param word Word - The word to search.
  * @param grpwords GrpWords* - array of list of words grouped by their first letter.
  * @return Boolean 
  */
-Boolean valid_word(const char* word, GrpWords* grpwords);
+Boolean valid_word(const Word word, GrpWords* grpwords);
 
 /**
  * @brief Calculate the score of the player.
@@ -166,6 +166,15 @@ int playercmpsizeANDscore(Player p1, Player p2);
  *            0 if their score and time are the same.
  */
 int playercmptimeANDscore(Player p1, Player p2);
+
+/**
+ * @brief 
+ * 
+ * @param p1 
+ * @param p2 
+ * @return int 
+ */
+int playercmpsizeANDtimeANDscore(Player p1, Player p2);
 
 /**
  * @brief Compare two Player by their pseudo (using strcmp)
