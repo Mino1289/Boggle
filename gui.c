@@ -235,10 +235,12 @@ Player play() {
         freeWord(&words[i]);
     }
     free(words);
+    words = NULL;
     
     for (int i = 0; i < NB_LETTER; i++) {
         freeGrpWords(&(grpwords[i]));
     }
     free(grpwords);
+    grpwords = NULL;
     return player;
 }

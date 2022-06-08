@@ -286,7 +286,8 @@ int isPseudoInList(Player* playerlist, int size, Word pseudo) {
 
 void freeWord(Word *word) {
     free(word->str);
-    *word = (Word) {0, NULL}; // legal ?
+    word->str = NULL;
+    word->length = 0;
 }
 
 void freeGrpWords(GrpWords *grpwords) {
@@ -294,6 +295,8 @@ void freeGrpWords(GrpWords *grpwords) {
         freeWord(&(grpwords->words[j]));
     }
     free(grpwords->words);
-    *grpwords = (GrpWords) {'\0', NULL, 0};
+    grpwords->lettre = '\0';
+    grpwords->words = NULL;
+    grpwords->nbWord = 0;
 }
 
