@@ -1,7 +1,7 @@
 CXX = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic
-LIBSDIR = -L. -L/usr/lib
-INCLUDEDIR = -I. -I/usr/include
+LIBSDIR = -L.
+INCLUDEDIR = -I. 
 
 DEBUG ?= 0 # can be changed on the command line
 ifeq ($(DEBUG),1)
@@ -20,6 +20,8 @@ else
 	EXPORT = sh export.sh
 	LIBTARGET := lib$(LIBCORENAME:=.so)
 	CLEANCMD = rm -rf *.o *.so *.exe *.dll main.txt
+	LIBSDIR += -L/usr/lib
+	INCLUDEDIR += -I/usr/include
 endif
 
 LIBSOURCE = gui grid game save
