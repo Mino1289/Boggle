@@ -58,7 +58,6 @@ int get_integer_input(const char* message, int min, int max);
  * @brief Get a string from the user
  * 
  * @param message char* - the message to print to the user.
- * 
  * @return Word - the word entered by the user.
  */
 Word get_string_input(const char* message);
