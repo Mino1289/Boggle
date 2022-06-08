@@ -26,8 +26,10 @@ void free_grid(int size, char** grid) {
     }
     for (int i = 0; i < size; i++) {
         free(grid[i]);
+        grid[i] = NULL;
     }
     free(grid);
+    grid = NULL;
 }
 
 Boolean contains_char(int size, char** grid, char c) {
