@@ -1,8 +1,13 @@
 #include <gui.h>
 
-
-#ifdef _WIN32
+/**
+ * @brief Print the grid
+ * 
+ * @param size int - size of the grid
+ * @param grid char** - pointer to the grid
+ */
 void print_grid(int size, char** grid) {
+#ifdef _WIN32
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
             printf("%c%c%c%c", k==0 ? i==0 ? 201 : 204 : i==0 ? 203 : 206, 205, 205, 205);
@@ -17,9 +22,7 @@ void print_grid(int size, char** grid) {
         printf("%c%c%c%c", i==0 ? 200 : 202, 205, 205, 205);
     }
     printf("%c\n", 188);
-}
 #else
-void print_grid(int size, char** grid) {
     for (int i = 0; i < size; i++) {
         for (int k = 0; k < size; k++) {
             printf("+---");
@@ -34,19 +37,40 @@ void print_grid(int size, char** grid) {
         printf("+---");
     }
     printf("+\n\n");
-}
 #endif
+}
 
+/**
+ * @brief Print a player in a stream
+ * 
+ * @param stream FILE* - The stream to print to
+ * @param player Player - The player to print.
+ */
 void printPlayer(FILE* stream, Player player) {
     fprintf(stream, "%s\t%.2f\t%d\t%d\n", player.pseudo, player.score, player.sizegrid, player.timeplayed);
 }
 
+/**
+ * @brief Print the playerlist in a stream.
+ * 
+ * @param stream FILE* - The stream to print to.
+ * @param playerlist Player* - The list of the players.
+ * @param size int - The size of the playerlist.
+ */
 void printPlayerlist(FILE* stream, Player* playerlist, int size) {
     for (int i = 0; i < size; i++) {
         printPlayer(stream, playerlist[i]);
     }
 }
 
+/**
+ * @brief Get an integer from the user
+ * 
+ * @param message char* - the message to print to the user.
+ * @param min int - the minimum value of the integer.
+ * @param max int - the maximum value of the integer.
+ * @return int - the integer entered by the user.
+ */
 int get_integer_input(const char* message, int min, int max) {
     char inputstring[MAX_CHAR_ARRAY_LENGTH];
     int tmp, input=0;
@@ -63,6 +87,12 @@ int get_integer_input(const char* message, int min, int max) {
     return input;
 }
 
+/**
+ * @brief Get a string from the user
+ * 
+ * @param message char* - the message to print to the user.
+ * @return Word - the word entered by the user.
+ */
 Word get_string_input(const char* message) {
     printf("%s\n", message);
     char temp[MAX_CHAR_ARRAY_LENGTH];
@@ -77,6 +107,11 @@ Word get_string_input(const char* message) {
     return word;
 }
 
+/**
+ * @brief Get an input, just a validation to the next step
+ * 
+ * @param message char* - the message to print to the user 
+ */
 void validate(const char* message) {
     printf("%s\n", message);
     #ifdef _WIN32
@@ -90,6 +125,10 @@ void validate(const char* message) {
     #endif
 }
 
+/**
+ * @brief Prints the logo 'BOGGLE' to stdin.
+ * 
+ */
 void print_logo() {
     printf("\n    ____  ____  ______________    ______  \n");
     printf("   / __ )/ __ \\/ ____/ ____/ /   / ____/ \n");
@@ -98,6 +137,10 @@ void print_logo() {
     printf("/_____/\\____/\\____/\\____/_____/_____/\n\n");
 }
 
+/**
+ * @brief Clear stdin.
+ * 
+ */
 void clear() {
     #ifdef _WIN32
         system("cls");
@@ -106,6 +149,11 @@ void clear() {
     #endif
 }
 
+/**
+ * @brief Wait some time.
+ * 
+ * @param seconds int - the number of seconds to wait
+ */
 void wait(int seconds) {
     double dtime = time(0);
     while (difftime(time(0), dtime) < seconds) {
@@ -113,6 +161,11 @@ void wait(int seconds) {
     }
 }
 
+/**
+ * @brief Start a game.
+ * 
+ * @return Player - The player who played.
+ */
 Player play() {
     Player player;
     int yes=1;

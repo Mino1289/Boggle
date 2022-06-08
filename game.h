@@ -84,7 +84,6 @@ Boolean is_around(int size, char** grid, int *row, int *col, char c, char next);
 
 /**
  * @brief Checks if a word is in the grid.
- * MARCHE PAS
  * @param size int - size of the grid.
  * @param grid char** - pointer to the grid to search.
  * @param word char* - the word to search.
@@ -128,7 +127,7 @@ float score(int size, Word* words);
 void swapPlayer(Player* playerlist, int index1, int index2);
 
 /**
- * @brief Print the playerlist.
+ * @brief Order the playerlist.
  *
  * @param playerlist Player* - the list of players.
  * @param size int - the number of players.
@@ -168,11 +167,13 @@ int playercmpsizeANDscore(Player p1, Player p2);
 int playercmptimeANDscore(Player p1, Player p2);
 
 /**
- * @brief 
+ * @brief Compare two Player by the size of the grid they played on and the time they played if their score are equal and by score.
  * 
- * @param p1 
- * @param p2 
- * @return int 
+ * @param p1 Player - the player to compare.
+ * @param p2 Player - the player to compare.
+ * @return int 1 if (size1 > size2) OR (size1 == size2 AND time1 > time2) OR (size1 == size2 AND time1 == time2 AND score1 > score2),
+ *            -1 if (size1 < size2) OR (size1 == size2 AND time1 < time2) OR (size1 == size2 AND time1 == time2 AND score1 < score2),
+ *             0 if their score, size and time are the same.
  */
 int playercmpsizeANDtimeANDscore(Player p1, Player p2);
 

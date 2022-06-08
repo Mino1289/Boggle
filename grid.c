@@ -1,5 +1,11 @@
 #include <grid.h>
 
+/**
+ * @brief Create a grid object (square matrix) filled with '0'.
+ * 
+ * @param size int - size of the grid
+ * @return char** Pointer to the grid
+ */
 char** create_grid(int size) {
     char** grid = malloc(sizeof(char*) * size);
     if (grid == NULL) {
@@ -20,6 +26,12 @@ char** create_grid(int size) {
     return grid;
 }
 
+/**
+ * @brief Free the grid
+ * 
+ * @param size int - size of the grid
+ * @param grid char** - pointer to the grid
+ */
 void free_grid(int size, char** grid) {
     if (grid == NULL) {
         return;
@@ -32,6 +44,14 @@ void free_grid(int size, char** grid) {
     grid = NULL;
 }
 
+/**
+ * @brief Check if the grid contains a char more than once
+ * 
+ * @param size int - size of the grid
+ * @param grid char** - pointer to the grid
+ * @param c char - char to check
+ * @return Boolean 
+ */
 Boolean contains_char(int size, char** grid, char c) {
     // if we find the char 2 times in the grid, we return true
     int count = 0;
@@ -49,6 +69,11 @@ Boolean contains_char(int size, char** grid, char c) {
     }
 }
 
+/**
+ * @brief Generate a random char
+ * 
+ * @return char the generated char
+ */
 char gen_rand_char() {
     int lettersdist[] = {8.182, 9.094, 12.443, 16.116, 32.842, 33.909, 34.776, 35.514, 43.101, 43.715, 43.789,
     49.251, 52.222, 59.325, 65.127, 67.651, 69.014, 75.714, 83.671, 90.923, 97.241, 99.081, 99.130, 99.557, 99.685, 100};
@@ -64,6 +89,13 @@ char gen_rand_char() {
     return 'a' + i;
 }
 
+/**
+ * @brief Check if the grid is correct : if there is no char more than once in each 3*3 sub-grid
+ * 
+ * @param size int - size of the grid
+ * @param grid char** - pointer to the grid
+ * @return char** - pointer to the new grid
+ */
 char** check_grid(int size, char** grid) {
     Boolean modif = FALSE;
     char** matsup = create_grid(3);
@@ -101,6 +133,13 @@ char** check_grid(int size, char** grid) {
     return grid;
 }
 
+/**
+ * @brief Fill the grid with random chars following the rules : no char more than once in each 3*3 sub-grid
+ * 
+ * @param size int - size of the grid
+ * @param grid char** - pointer to the grid
+ * @return char** pointer to the new grid
+ */
 char** fill_grid_algo(int size, char** grid) {
     int gap_row = 0;
     int gap_col = 0;
