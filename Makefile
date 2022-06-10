@@ -4,22 +4,22 @@ LIBSDIR = -L.
 INCLUDEDIR = -I. 
 
 DEBUG ?= 0 # can be changed on the command line
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUG), 1)
 	CFLAGS += -ggdb
 	CFLAGS += -DDEBUG
 endif
 
-LIBCORENAME = grid
+LIBCORENAME = boggle
 
 ifeq ($(OS), Windows_NT)
 	EXPORT = export.bat
 	LIBTARGET :=$(LIBCORENAME:=.dll)
-	CLEANCMD = @del /q *.o *.dll *.exe *.so main.txt
+	CLEANCMD = @del /q *.o *.so *.exe *.dll
 else
 	CFLAGS += -fpic
 	EXPORT = sh export.sh
 	LIBTARGET := lib$(LIBCORENAME:=.so)
-	CLEANCMD = rm -rf *.o *.so *.exe *.dll main.txt
+	CLEANCMD = rm -rf *.o *.so *.exe *.dll
 	LIBSDIR += -L/usr/lib
 	INCLUDEDIR += -I/usr/include
 endif
